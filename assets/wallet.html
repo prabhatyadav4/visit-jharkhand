@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jharkhand Tourism - Crypto Wallet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #14F195;
+            --primary-color-dark: #0ead69;
+            --secondary-color: #8A2BE2;
+            --bg-color: #121212;
+            --card-bg: #1E1E1E;
+            --text-dark: #E0E0E0;
+            --text-light: #888888;
+            --border-color: #2D2D2D;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --border-radius: 16px;
+            --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition-speed: 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            background: radial-gradient(circle at top left, rgba(20, 241, 149, 0.1), transparent 30%), radial-gradient(circle at bottom right, rgba(138, 43, 226, 0.1), transparent 30%), var(--bg-color);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .wallet-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+        }
+
+        .wallet-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .wallet-nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 600;
+            padding: 10px 5px;
+            position: relative;
+            transition: var(--transition-speed);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: var(--transition-speed);
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .network-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            background-color: rgba(138, 43, 226, 0.1);
+            color: var(--secondary-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        .network-status::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+
+        .connect-btn {
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .connect-btn:hover {
+            background-color: var(--primary-color-dark);
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(20, 241, 149, 0.3);
+        }
+        .connect-btn.connected {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .connect-btn .fa-check { font-size: 0.9em; }
+
+        .wallet-body {
+            padding: 30px;
+        }
+
+        .wallet-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .wallet-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Overview Section */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .balance-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            transition: var(--transition-speed);
+        }
+        .balance-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(20, 241, 149, 0.5);
+        }
+
+        .balance-card.primary {
+            background: linear-gradient(270deg, var(--primary-color), var(--secondary-color));
+            background-size: 200% 200%;
+            animation: gradient-animation 5s ease infinite;
+            color: white;
+            border: none;
+        }
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .balance-card.primary .card-title {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+        .primary .card-icon {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        .card-value-small {
+            font-size: 1.5rem;
+            color: #d1b3ff;
+        }
+
+        /* Donut Chart */
+        .chart-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .donut-chart {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--secondary-color) 0% 40%,
+                #209cee 40% 90%,
+                var(--border-color) 90% 100%
+            );
+            animation: fillChart 1s ease-out;
+        }
+        @keyframes fillChart {
+            from { transform: rotate(-180deg) scale(0.8); opacity: 0;}
+            to { transform: rotate(0) scale(1); opacity: 1;}
+        }
+
+        .chart-legend ul { list-style-type: none; }
+        .chart-legend li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-weight: 500; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+        
+        /* Main Content Grid */
+        .main-content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .content-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 25px;
+        }
+        .box-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; }
+
+        .asset-table, .transaction-table { width: 100%; border-collapse: collapse; }
+        .asset-table th, .asset-table td,
+        .transaction-table th, .transaction-table td { padding: 15px 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .asset-table tr:last-child td,
+        .transaction-table tr:last-child td { border-bottom: none; }
+        .asset-table tbody tr,
+        .transaction-table tbody tr {
+            transition: background-color var(--transition-speed);
+        }
+        .asset-table tbody tr:hover,
+        .transaction-table tbody tr:hover { background-color: rgba(255,255,255,0.03); }
+        
+        .asset-name { display: flex; align-items: center; gap: 12px; }
+        .asset-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--border-color);
+            display: grid;
+            place-items: center;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        .asset-info span { display: block; line-height: 1.3; }
+        .asset-info .symbol { font-size: 0.85rem; color: var(--text-light); }
+        .balance-value { text-align: right; }
+        .balance-value .inr-value { font-size: 0.85rem; color: var(--text-light); }
+
+        .promo-banner {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white; border-radius: var(--border-radius); padding: 30px; text-align: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px;
+        }
+        .promo-banner .fa-layer-group { font-size: 3rem; color: var(--primary-color); }
+        .promo-banner h3 { font-size: 1.3rem; }
+        .promo-btn {
+            background-color: var(--primary-color); color: #000; border: none; padding: 12px 25px;
+            border-radius: 50px; font-weight: 700; cursor: pointer; transition: var(--transition-speed);
+        }
+        .promo-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(20, 241, 149, 0.4); }
+
+        .status-badge { padding: 5px 12px; border-radius: 50px; font-weight: 600; font-size: 0.8rem; }
+        .status-completed { background-color: rgba(40, 167, 69, 0.1); color: var(--success-color); }
+        .status-pending { background-color: rgba(255, 193, 7, 0.1); color: var(--warning-color); }
+        .status-failed { background-color: rgba(220, 53, 69, 0.1); color: var(--danger-color); }
+
+        .tx-id {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+        .tx-id:hover { color: var(--primary-color); text-decoration: underline; }
+        
+        /* Deposit Section */
+        .deposit-content {
+            text-align: center;
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .deposit-content h3 { margin-bottom: 15px; font-size: 1.3rem; }
+        .deposit-content p { color: var(--text-light); margin-bottom: 25px; }
+        .wallet-address-box {
+            background-color: #121212;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            word-break: break-all;
+        }
+        .wallet-address { font-family: 'Courier New', Courier, monospace; font-weight: 600; text-align: left; }
+        .copy-btn {
+            background: var(--primary-color); color: #000; border: none; padding: 10px 15px;
+            border-radius: 8px; cursor: pointer; transition: var(--transition-speed); font-weight: 600;
+        }
+        .copy-btn:hover { background: var(--primary-color-dark); }
+        .copy-btn .fa-copy { margin-right: 5px; }
+
+        /* Placeholder Styles */
+        .placeholder-content { text-align: center; padding: 50px; color: var(--text-light); }
+        .placeholder-content i { font-size: 3rem; margin-bottom: 20px; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--box-shadow);
+            transform: scale(1);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+        .modal-overlay.hidden .modal-content {
+            transform: scale(0.95);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-header h3 { font-size: 1.4rem; color: var(--text-dark); }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-light);
+            line-height: 1;
+            transition: color var(--transition-speed);
+        }
+        .close-btn:hover { color: var(--primary-color); }
+
+        .wallet-list { list-style-type: none; }
+        .wallet-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+        .wallet-option:hover {
+            background-color: rgba(20, 241, 149, 0.1);
+            border-color: var(--primary-color);
+            transform: scale(1.03);
+        }
+        .wallet-option img { width: 40px; height: 40px; object-fit: contain; border-radius: 8px;}
+        .wallet-option span { font-size: 1.1rem; font-weight: 600; }
+
+        /* Shimmer Animation */
+        .shimmer-wrapper {
+            width: 100%;
+            animation: shimmer 2s infinite linear;
+            background: linear-gradient(to right, transparent 0%, #2d2d2d 50%, transparent 100%);
+            background-size: 200% 100%;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .shimmer {
+            height: 20px;
+            background: #2d2d2d;
+            border-radius: 4px;
+        }
+        .shimmer.w-50 { width: 50%; }
+        .shimmer.w-75 { width: 75%; }
+        .shimmer.w-25 { width: 25%; }
+        
+        /* Responsive */
+        @media (max-width: 992px) { .main-content-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .wallet-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .wallet-body, .wallet-header { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wallet-container">
+    <header class="wallet-header">
+        <nav class="wallet-nav">
+            <a href="#" class="nav-link active" data-target="overview">Overview</a>
+            <a href="#" class="nav-link" data-target="deposit">Deposit</a>
+            <a href="#" class="nav-link" data-target="withdraw">Withdraw</a>
+            <a href="#" class="nav-link" data-target="summary">Summary</a>
+        </nav>
+        <div class="header-right">
+            <div class="network-status">Polygon Network</div>
+            <button id="connect-wallet-btn" class="connect-btn"><i class="fas fa-plug"></i> Connect Wallet</button>
+        </div>
+    </header>
+    <main class="wallet-body">
+        <!-- Overview Section -->
+        <section id="overview" class="wallet-section active">
+            <div class="overview-grid">
+                <div class="balance-card primary">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-wallet"></i></div>
+                        <span class="card-title">Total Balance</span>
+                    </div>
+                    <div id="total-balance" class="card-value" data-value="100500.75">₹0.00</div>
+                </div>
+                <div class="balance-card">
+                     <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-coins"></i></div>
+                        <span class="card-title">MATIC Balance</span>
+                    </div>
+                    <div class="card-value">125.50 <span class="card-value-small">MATIC</span></div>
+                </div>
+                <div class="balance-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="color: var(--secondary-color);"><i class="fas fa-chart-pie"></i></div>
+                        <span class="card-title">Assets Distribution</span>
+                    </div>
+                    <div class="chart-container">
+                        <div class="donut-chart"></div>
+                        <div class="chart-legend">
+                            <ul>
+                                <li><span class="legend-dot" style="background:var(--secondary-color);"></span>MATIC</li>
+                                <li><span class="legend-dot" style="background:#209cee;"></span>INR</li>
+                                <li><span class="legend-dot" style="background:var(--border-color);"></span>Other</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-content-grid">
+                <div class="content-box">
+                    <h3 class="box-title">My Assets</h3>
+                    <table class="asset-table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="asset-name">
+                                        <div class="asset-icon" style="background-color: rgba(138, 43, 226, 0.1);">
+                                            <svg width="20" height="20" viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M51 102C79.1665 102 102 79.1665 102 51C102 22.8335 79.1665 0 51 0C22.8335 0 0 22.8335 0 51C0 79.1665 22.8335 102 51 102ZM51 86.8438C70.8359 86.8438 86.8438 70.8359 86.8438 51C86.8438 31.1641 70.8359 15.1562 51 15.1562C31.1641 15.1562 15.1562 31.1641 15.1562 51C15.1562 70.8359 31.1641 86.8438 51 86.8438ZM37.3125 40.125C38.6484 38.7891 40.8516 38.7891 42.1875 40.125L48.4688 46.4062L59.8125 35.0625C61.1484 33.7266 63.3516 33.7266 64.6875 35.0625C66.0234 36.3984 66.0234 38.6016 64.6875 39.9375L50.8125 53.8125L37.3125 40.3125V40.125Z" fill="#8A2BE2"/></svg>
+                                        </div>
+                                        <div class="asset-info">
+                                            <span>Polygon</span>
+                                            <span class="symbol">MATIC</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="balance-value">
+                                    <span>125.50 MATIC</span><br>
+                                    <span class="inr-value">~ ₹90,250.00</span>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td>
+                                    <div class="asset-name">
+                                        <div class="asset-icon" style="color: #209cee; background: rgba(32, 156, 238, 0.1);"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                                        <div class="asset-info">
+                                            <span>Indian Rupee</span>
+                                            <span class="symbol">INR</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="balance-value">
+                                    <span>10,250.75 INR</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="promo-banner">
+                    <i class="fas fa-layer-group"></i>
+                    <h3>Stake Your MATIC on Polygon</h3>
+                    <p>Earn staking rewards directly in your wallet!</p>
+                    <button class="promo-btn">Get Started</button>
+                </div>
+            </div>
+             <div class="content-box">
+                <h3 class="box-title">Transaction History</h3>
+                <table id="transaction-history-table" class="transaction-table">
+                    <thead>
+                        <tr>
+                            <th>Details</th>
+                            <th>Amount</th>
+                            <th>TxID</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Shimmer placeholders -->
+                        <tr>
+                           <td><div class="shimmer w-75"></div></td>
+                           <td><div class="shimmer w-50"></div></td>
+                           <td><div class="shimmer w-50"></div></td>
+                           <td><div class="shimmer w-25"></div></td>
+                        </tr>
+                        <tr>
+                           <td><div class="shimmer w-50"></div></td>
+                           <td><div class="shimmer w-75"></div></td>
+                           <td><div class="shimmer w-50"></div></td>
+                           <td><div class="shimmer w-25"></div></td>
+                        </tr>
+                         <tr>
+                           <td><div class="shimmer w-75"></div></td>
+                           <td><div class="shimmer w-25"></div></td>
+                           <td><div class="shimmer w-50"></div></td>
+                           <td><div class="shimmer w-25"></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Other Sections -->
+        <section id="summary" class="wallet-section">
+             <div class="placeholder-content">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <h2>Summary Coming Soon</h2>
+                <p>Detailed analytics and reports about your spending will be available here.</p>
+            </div>
+        </section>
+        <section id="withdraw" class="wallet-section">
+            <div class="placeholder-content">
+                <i class="fas fa-paper-plane"></i>
+                <h2>Withdrawal Feature Coming Soon</h2>
+                <p>You'll be able to withdraw your funds from here.</p>
+            </div>
+        </section>
+        <section id="deposit" class="wallet-section">
+            <div class="deposit-content">
+                <i class="fas fa-qrcode" style="font-size: 5rem; color: var(--text-light); margin-bottom: 20px;"></i>
+                <h3>Your Polygon Wallet Address</h3>
+                <p>Send only MATIC or other Polygon-compatible tokens to this address. Sending other coins may result in permanent loss.</p>
+                <div class="wallet-address-box">
+                    <span id="wallet-address" class="wallet-address">0x71C7...A57B8b18</span>
+                    <button id="copy-address-btn" class="copy-btn"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Wallet Connection Modal -->
+<div id="wallet-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Connect a Wallet</h3>
+            <button id="close-modal-btn" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ul class="wallet-list">
+                <li class="wallet-option" data-wallet="metamask">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask">
+                    <span>MetaMask</span>
+                </li>
+                <li class="wallet-option" data-wallet="walletconnect">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/Walletconnect-logo.png?20221128041755" alt="WalletConnect">
+                    <span>WalletConnect</span>
+                </li>
+                 <li class="wallet-option" data-wallet="coinbase">
+                    <img src="https://altcoinsbox.com/wp-content/uploads/2022/12/coinbase-logo.jpg" alt="Coinbase Wallet">
+                    <span>Coinbase Wallet</span>
+                </li>
+                <li class="wallet-option" data-wallet="trustwallet">
+                    <img src="https://avatars.githubusercontent.com/u/32179889?s=200&v=4" alt="Trust Wallet">
+                    <span>Trust Wallet</span>
+                </li>
+                 <li class="wallet-option" data-wallet="ledger">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iYmxhY2siLz4KPHBhdGggZD0iTTExIDI4VjI1SDI0VjI4SDExWk0xMSAyMS44N1YxOC44N0gyOVYyMS44N0gxMVpNMTEgMTUuNzVWMTEuNzVIMjRWMTUuNzVIMTFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" alt="Ledger">
+                    <span>Ledger</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Tab switching logic
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.wallet-section');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            navLinks.forEach(l => l.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+
+            link.classList.add('active');
+            const targetSection = document.getElementById(link.dataset.target);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+        });
+    });
+
+    // Animate total balance counter
+    const totalBalanceEl = document.getElementById('total-balance');
+    if (totalBalanceEl) {
+        const targetValue = parseFloat(totalBalanceEl.dataset.value);
+        const duration = 1500;
+        let startTime = null;
+
+        function animateCounter(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = timestamp - startTime;
+            const currentAmount = Math.min((progress / duration) * targetValue, targetValue);
+            
+            totalBalanceEl.textContent = `₹${currentAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            
+            if (progress < duration) {
+                requestAnimationFrame(animateCounter);
+            } else {
+                totalBalanceEl.textContent = `₹${targetValue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            }
+        }
+        requestAnimationFrame(animateCounter);
+    }
+
+    // Demo Transaction Data
+    const transactions = [
+        { type: 'Payment', description: 'Hotel Booking', asset: 'MATIC', amount: -25.5, date: '2025-09-15', status: 'Completed', txId: '0x123...a4f6' },
+        { type: 'Deposit', description: 'From Exchange', asset: 'MATIC', amount: 151, date: '2025-09-14', status: 'Completed', txId: '0x456...b3d1' },
+        { type: 'Reward', description: 'Staking Reward', asset: 'MATIC', amount: 0.85, date: '2025-09-14', status: 'Completed', txId: '0x789...c8e2' },
+        { type: 'Purchase', description: 'Local Handicrafts', asset: 'INR', amount: -2500, date: '2025-09-16', status: 'Pending', txId: 'N/A' },
+        { type: 'Swap', description: 'INR to MATIC', asset: 'MATIC', amount: 10, date: '2025-09-12', status: 'Failed', txId: '0xabc...f9g5' },
+        { type: 'Deposit', description: 'Bank Transfer', asset: 'INR', amount: 12750.75, date: '2025-09-11', status: 'Completed', txId: 'N/A' },
+    ];
+
+    // Populate transaction history table with delay for shimmer
+    const transactionTableBody = document.querySelector('#transaction-history-table tbody');
+    function populateTransactions() {
+        if(transactionTableBody){
+            // Clear shimmer placeholders
+            transactionTableBody.innerHTML = '';
+            
+            transactions.forEach(tx => {
+                const row = document.createElement('tr');
+                
+                const typeColor = tx.amount > 0 ? 'var(--success-color)' : 'var(--text-dark)';
+                const amountPrefix = tx.amount > 0 ? '+' : '';
+
+                row.innerHTML = `
+                    <td>
+                        <div class="asset-name">
+                            <div class="asset-icon" style="color: ${tx.amount > 0 ? 'var(--success-color)' : 'var(--danger-color)'}; background: ${tx.amount > 0 ? 'rgba(40,167,69,0.1)' : 'rgba(220,53,69,0.1)'};">
+                               <i class="fas fa-arrow-${tx.amount > 0 ? 'down' : 'up'}"></i>
+                            </div>
+                            <div class="asset-info">
+                                <span style="font-weight:600;">${tx.type}</span>
+                                <span class="symbol">${tx.description}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="color: ${typeColor}; font-weight: 600;">${amountPrefix}${tx.amount.toLocaleString('en-IN')} ${tx.asset}</td>
+                    <td><a href="#" class="tx-id">${tx.txId.substring(0,6)}...${tx.txId.substring(tx.txId.length - 4)}</a></td>
+                    <td><span class="status-badge status-${tx.status.toLowerCase()}">${tx.status}</span></td>
+                `;
+                if (tx.txId === 'N/A') {
+                    const txIdLink = row.querySelector('.tx-id');
+                    txIdLink.style.color = 'var(--text-light)';
+                    txIdLink.style.textDecoration = 'none';
+                    txIdLink.style.pointerEvents = 'none';
+                    txIdLink.textContent = 'N/A';
+                }
+                transactionTableBody.appendChild(row);
+            });
+        }
+    }
+    
+    setTimeout(populateTransactions, 2000); // Simulate loading time
+
+    // Copy wallet address
+    const copyBtn = document.getElementById('copy-address-btn');
+    const walletAddressEl = document.getElementById('wallet-address');
+    if (copyBtn && walletAddressEl) {
+        const fullAddress = "0x71C7656EC7ab88b098defB751B7401B5A57B8b18";
+        walletAddressEl.textContent = `${fullAddress.substring(0,6)}...${fullAddress.substring(fullAddress.length - 4)}`;
+
+        copyBtn.addEventListener('click', () => {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = fullAddress;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+            }, 2000);
+        });
+    }
+
+    // --- Wallet Connection Modal Logic ---
+    const connectWalletBtn = document.getElementById('connect-wallet-btn');
+    const walletModal = document.getElementById('wallet-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const walletOptions = document.querySelectorAll('.wallet-option');
+
+    function showModal() {
+        if(walletModal) walletModal.classList.remove('hidden');
+    }
+
+    function hideModal() {
+        if(walletModal) walletModal.classList.add('hidden');
+    }
+
+    if (connectWalletBtn) {
+        connectWalletBtn.addEventListener('click', showModal);
+    }
+
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', hideModal);
+    }
+
+    if (walletModal) {
+        walletModal.addEventListener('click', (e) => {
+            if (e.target === walletModal) {
+                hideModal();
+            }
+        });
+    }
+
+    walletOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            if (option.querySelector('.fa-spinner')) return; // Prevent multiple clicks
+
+            const walletName = option.dataset.wallet;
+            const spinner = document.createElement('i');
+            spinner.className = 'fas fa-spinner fa-spin';
+            option.appendChild(spinner);
+
+            setTimeout(() => {
+                hideModal();
+                connectWalletBtn.innerHTML = `<i class="fas fa-check"></i> Connected: 0x71C7...8b18`;
+                connectWalletBtn.classList.add('connected');
+                spinner.remove();
+            }, 1500);
+        });
+    });
+});
+</script>
+
+</body>
+</html>
+

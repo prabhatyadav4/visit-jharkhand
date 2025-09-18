@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jharkhand Marketplace</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom Styles and Tailwind Configuration -->
+    <style>
+        /* New Creamy/Off-White Theme */
+        :root {
+            --brand-brown: #4f3120;
+            --brand-gold: #d89245;
+            --background-cream: #f2efe3;
+            --text-dark: #2C3E50;
+        }
+
+        body {
+            background-color: var(--background-cream);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            /* Fixes horizontal scroll issue */
+        }
+
+        .font-primary {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        #header {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .header-hidden {
+            transform: translateY(-100%);
+        }
+
+        /* Hero Slideshow */
+        .hero-slide {
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Stacked Card Slider Styles */
+        .stacked-slider-container {
+            position: relative;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stacked-card {
+            position: absolute;
+            width: 300px;
+            height: 420px;
+            border-radius: 1rem;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s, z-index 0s 0.25s;
+            cursor: pointer;
+        }
+
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            color: white;
+            border-radius: 0 0 1rem 1rem;
+        }
+
+        /* Detail view transition */
+        .detail-view-content {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'primary': ['Cormorant Garamond', 'serif'],
+                        'secondary': ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-brown': '#4f3120',
+                        'brand-gold': '#d89245',
+                        'background-cream': '#f2efe3',
+                        'text-dark': '#2C3E50',
+                        'chhau-red': '#D90429',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background-cream text-text-dark">
+
+    <!-- HEADER -->
+    <header id="header" class="fixed top-0 left-0 w-full z-50">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-end">
+            <div class="flex items-center gap-4">
+                <div class="relative w-full max-w-md lg:max-w-lg">
+                    <input type="search" placeholder="Search..."
+                        class="w-full bg-white/20 text-white placeholder-gray-300 rounded-full py-3 pl-6 pr-14 backdrop-blur-sm border-2 border-transparent hover:border-brand-gold/50 focus:border-brand-gold focus:ring-0 transition-colors duration-300" />
+                    <button aria-label="Search" class="absolute right-4 top-1/2 -translate-y-1/2 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="relative">
+                    <button aria-label="Open Cart" class="relative text-white p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span
+                            class="absolute top-0 right-0 h-5 w-5 bg-chhau-red text-white text-xs rounded-full flex items-center justify-center">2</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="relative bg-background-cream h-screen flex">
+            <div class="w-full lg:w-1/2 flex items-center justify-center bg-background-cream">
+                <div class="container mx-auto px-6 text-left max-w-xl">
+                    <p class="text-brand-brown/80 uppercase tracking-widest">Welcome to Jharkhand</p>
+                    <h1 class="text-brand-brown font-primary text-6xl md:text-8xl mt-2">Handmade Crafts & Local Stays
+                    </h1>
+                    <a href="#arts-and-crafts"
+                        class="mt-8 inline-block bg-brand-gold text-brand-brown font-bold uppercase tracking-widest text-sm px-10 py-3 rounded-md hover:bg-opacity-90 transition">Explore
+                        Now</a>
+                </div>
+            </div>
+            <div id="hero-slideshow" class="hidden lg:block w-1/2 h-full relative overflow-hidden">
+                <!-- Slides will be injected here -->
+            </div>
+        </section>
+
+        <!-- ARTS & CRAFTS SLIDER SECTION -->
+        <section id="arts-and-crafts" class="py-20 lg:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 max-w-3xl mx-auto">
+                    <h2 class="text-5xl font-primary text-brand-brown">Authentic Arts & Crafts</h2>
+                    <p class="mt-2 text-text-dark/70 max-w-lg mx-auto">Discover unique handcrafted items that tell a
+                        story of Jharkhand's rich cultural heritage.</p>
+                </div>
+                <div class="grid lg:grid-cols-2 items-center gap-12">
+                    <div id="product-detail-view"
+                        class="h-[500px] bg-background-cream rounded-2xl p-8 flex flex-col justify-center overflow-hidden">
+                        <!-- Default/Dynamic Content updated by JS -->
+                        <div class="default-content text-center">
+                            <img src="https://placehold.co/400x250/A0522D/FFFFFF?text=Browse+Our+Crafts"
+                                alt="Default Image for Crafts"
+                                class="w-full max-h-60 object-cover rounded-lg mx-auto mb-4">
+                            <h3 class="text-3xl font-primary text-brand-brown">Browse Our Arts & Crafts</h3>
+                            <p class="mt-2 text-text-dark/80">Click on any item to see details and make a purchase.</p>
+                        </div>
+                    </div>
+                    <div id="product-slider" class="stacked-slider-container">
+                        <!-- Cards injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAYS & DORMS GRID SECTION -->
+        <section id="stays-and-dorms" class="py-20 lg:py-24 bg-background-cream">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 max-w-3xl mx-auto">
+                    <h2 class="text-5xl font-primary text-brand-brown">Local Stays & Dormitories</h2>
+                    <p class="mt-2 text-text-dark/70 max-w-lg mx-auto">Find your perfect stay, from rustic homestays to
+                        comfortable city dorms. Experience Jharkhand from a local perspective.</p>
+                </div>
+                <div class="grid lg:grid-cols-2 items-center gap-12">
+                    <div id="stays-detail-view"
+                        class="h-[500px] bg-white rounded-2xl p-8 flex flex-col justify-center overflow-hidden">
+                        <!-- Default/Dynamic Content updated by JS -->
+                        <div class="default-content text-center">
+                            <img src="https://placehold.co/400x250/556B2F/FFFFFF?text=Find+Your+Stay"
+                                alt="Default Image for Stays"
+                                class="w-full max-h-60 object-cover rounded-lg mx-auto mb-4">
+                            <h3 class="text-3xl font-primary text-brand-brown">Find Your Perfect Stay</h3>
+                            <p class="mt-2 text-text-dark/80">Click on any option to view rates and amenities.</p>
+                        </div>
+                    </div>
+                    <div id="stays-slider" class="stacked-slider-container">
+                        <!-- Cards injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOCAL TRANSPORT SECTION -->
+        <section id="local-transport" class="py-20 lg:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 max-w-3xl mx-auto">
+                    <h2 class="text-5xl font-primary text-brand-brown">Efficient Local Transport</h2>
+                    <p class="mt-2 text-text-dark/70 max-w-lg mx-auto">Navigate Jharkhand with ease. Choose from a
+                        variety of reliable transport options to suit your travel needs.</p>
+                </div>
+                <div class="grid lg:grid-cols-2 items-center gap-12">
+                    <div id="transport-detail-view"
+                        class="h-[500px] bg-background-cream rounded-2xl p-8 flex flex-col justify-center overflow-hidden">
+                        <!-- Default/Dynamic Content updated by JS -->
+                        <div class="default-content text-center">
+                            <img src="https://placehold.co/400x250/708090/FFFFFF?text=Book+Your+Ride"
+                                alt="Default Image for Transport"
+                                class="w-full max-h-60 object-cover rounded-lg mx-auto mb-4">
+                            <h3 class="text-3xl font-primary text-brand-brown">Book Your Ride</h3>
+                            <p class="mt-2 text-text-dark/80">Click on a transport option to learn more and book.</p>
+                        </div>
+                    </div>
+                    <div id="transport-slider" class="stacked-slider-container">
+                        <!-- Cards injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-brown text-white">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 font-primary">Jharkhand Marketplace</h3>
+                    <p class="text-white/70">Your portal to the authentic crafts, stays, and culture of Jharkhand.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Explore</h4>
+                    <ul class="text-white/70">
+                        <li class="mb-2"><a href="#arts-and-crafts" class="hover:text-brand-gold">Arts & Crafts</a></li>
+                        <li class="mb-2"><a href="#stays-and-dorms" class="hover:text-brand-gold">Stays & Dorms</a></li>
+                        <li class="mb-2"><a href="#local-transport" class="hover:text-brand-gold">Transport</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <p class="mb-2 text-white/70">Ranchi, Jharkhand</p>
+                    <p class="mb-2"><a href="mailto:info@jharkhandmarketplace.com"
+                            class="hover:text-brand-gold">info@jharkhandmarketplace.com</a></p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4 text-white/70">
+                        <a href="#" class="hover:text-brand-gold">Facebook</a>
+                        <a href="#" class="hover:text-brand-gold">Instagram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-white/10 text-center text-white/50">
+                <p>&copy; 2025 Jharkhand Marketplace. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Header Hide/Show on Scroll ---
+            let lastScrollTop = 0;
+            const header = document.getElementById('header');
+            if (header) {
+                window.addEventListener('scroll', () => {
+                    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    if (scrollTop > lastScrollTop && scrollTop > 100) {
+                        header.classList.add('header-hidden');
+                    } else {
+                        header.classList.remove('header-hidden');
+                    }
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                });
+            }
+
+            // --- Hero Slideshow ---
+            const heroSlideshow = document.getElementById('hero-slideshow');
+            if (heroSlideshow) {
+                const slides = [
+                    { img: "https://d35l77wxi0xou3.cloudfront.net/collab/craft1575447804Dhokra%20Showcase%201.jpg", text: "" },
+
+                    { img: "https://travelogyindia.b-cdn.net/blog/wp-content/uploads/2020/03/Munda-Tribe-Jharkhand.jpg", text: "" },
+
+                    { img: "https://scontent.fjlr2-2.fna.fbcdn.net/v/t1.6435-9/121551741_1060673684393344_1368691823872331434_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=3a1ebe&_nc_ohc=EJjm0T7Jc9sQ7kNvwFnCvgZ&_nc_oc=AdkEKKpuTQ_xq4Piiy3KEY9U8Ke3J3_arYNRkD-SbaDHLd2ny0gFQg1ZmhW28EZW4f-kHpcE-blvpwRccqzJ4pCO&_nc_zt=23&_nc_ht=scontent.fjlr2-2.fna&_nc_gid=KZQu438GFgRiPou4c-0Ivg&oh=00_AfYkEvzTJ0-x5vxAMhDZRbU8oGh9b-Bdgzu-xgis3BzKgQ&oe=68EF7CC8", text: "" },
+
+                    { img: "https://i.pinimg.com/736x/71/0d/e2/710de2f461bae276da4d385e0fd7fb0b.jpg", text: "" },
+
+                    { img: "https://scontent.fjlr2-1.fna.fbcdn.net/v/t39.30808-6/242722039_10226991129027845_2118394818786929771_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=2285d6&_nc_ohc=OGLtc8aYlVUQ7kNvwFnRGG-&_nc_oc=Adnk1WhkJVWY0EEm_YEPXp55Z5xoPzFLBcHBRDYB6whcsjxcFNVcOYsI3R41SFEzwETcttbfb1UYsvhX05PMyxwM&_nc_zt=23&_nc_ht=scontent.fjlr2-1.fna&_nc_gid=QUwOb_FJij13CP8AFTyGQA&oh=00_Afa1p5EQldG7pDaGdnJIwAr4VUExwwnilf1MckdbBv-WfQ&oe=68CDC251", text: "" },
+                ];
+                let currentSlide = 0;
+
+                slides.forEach((slide, index) => {
+                    const slideEl = document.createElement('div');
+                    slideEl.className = 'hero-slide absolute inset-0 w-full h-full bg-cover bg-center';
+                    slideEl.style.backgroundImage = `url('${slide.img}')`;
+                    slideEl.style.opacity = index === 0 ? '1' : '0';
+                    slideEl.innerHTML = `<div class="absolute inset-0 bg-black/30 flex items-end justify-start p-12"><h2 class="text-4xl text-white font-primary">${slide.text}</h2></div>`;
+                    heroSlideshow.appendChild(slideEl);
+                });
+
+                setInterval(() => {
+                    const allSlides = heroSlideshow.children;
+                    allSlides[currentSlide].style.opacity = '0';
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    allSlides[currentSlide].style.opacity = '1';
+                }, 4000);
+            }
+
+            // --- Data for Sliders ---
+            const productData = [
+                { img: "https://cpimg.tistatic.com/08876505/b/4/Handcrafted-miniature-bud.jpg", title: "Terracotta Vases - Hand Painted", price: "₹1,999", description: "Crafted from natural clay and adorned with vibrant hand-painted motifs, these terracotta vases from Jharkhand reflect the region’s rich folk art traditions. Perfect for adding a rustic, artistic touch to your home décor while celebrating authentic tribal craftsmanship." },
+
+                { img: "https://d35l77wxi0xou3.cloudfront.net/collab/craft1575447803Dhokra%20Banner.jpg", title: "Dhokra - Metal Statues", price: "₹6,999", description: "Timeless and artistic, these handcrafted Dhokra statues are made using the ancient lost-wax casting technique. A symbol of Jharkhand’s tribal heritage, each piece features intricate detailing, making it a perfect collectible or décor accent." },
+
+                { img: "https://static.wixstatic.com/media/9dd462_a6d222c0c7b840b1a0103b482fd582e0~mv2.jpg/v1/fill/w_625,h_416,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/9dd462_a6d222c0c7b840b1a0103b482fd582e0~mv2.jpg", title: "Sohrai Painting - Elephants and Birds", price: "₹1,699", description: "Handmade on natural surfaces with organic colors, this Sohrai painting from Jharkhand beautifully depicts elephants and birds, symbolizing harmony with nature. A traditional tribal art form, it brings earthy charm and cultural elegance to your space." },
+
+                { img: "https://img2.exportersindia.com/product_images/bc-small/2021/5/6860654/bamboo-baskets-1621321536-5825888.jpeg", title: "Bamboo Baskets", price: "₹249", description: "Eco-friendly and handwoven by skilled artisans, this bamboo basket from Jharkhand is durable, lightweight, and perfect for daily use or home décor. A simple yet elegant piece of tribal craftsmanship." },
+
+                { img: "https://www.memeraki.com/cdn/shop/files/1._Tribal_in_Wooden_mask_Paramesh_Sarkar_902x.jpg?v=1737355113", title: "Tribal Wooden mask ", price: "₹2,999", description: "Carved by tribal artisans of Jharkhand, this wooden mask showcases bold expressions and traditional motifs. Used in cultural rituals and folk performances, it also serves as a striking piece of wall décor with deep cultural significance." },
+
+                { img: "https://m.media-amazon.com/images/I/91JP8Ed24nL._SL1500_.jpg", title: "Dhokra & Warli Art", price: "₹3,599", description: "A fusion of tradition and artistry, this wall hanging combines handcrafted Dhokra metalwork with vibrant Warli hand painting. Made by tribal artisans, it reflects cultural heritage while adding an elegant rustic charm to your home décor." },
+
+                { img: "https://i.pinimg.com/474x/f4/44/ac/f444ac4e31676cd736eab013b13b90dc.jpg", title: "Sita Ka Haar", price: "₹4,999", description: "Elegant and traditional, Sita ka Haar from Jharkhand is handcrafted with intricate designs and multiple chains. A timeless tribal piece that adds cultural charm to any outfit." },
+            ];
+
+            const staysData = [
+                { img: "https://mountail.in/wp-content/uploads/2025/02/m4.jpg", title: "Eco-Resort Netarhat", price: "₹2,599/night", description: "Nestled in the “Queen of Chotanagpur,” Eco-Resort Netarhat offers a serene escape surrounded by lush forests, rolling hills, and breathtaking sunsets. Built with eco-friendly architecture, it blends comfort with sustainability, making it perfect for nature lovers, families, and travellers seeking peace. Enjoy local cuisine, tribal culture, and adventure trails – all in the lap of nature." },
+
+                { img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/ce/ed/57/caption.jpg?w=1400&h=-1&s=1", title: "Netarhat Art Village Resort", price: "₹1,099/night", description: "Experience the charm of tribal art and nature at Netarhat Art Village Resort. Surrounded by hills and forests, the resort is designed to showcase local heritage through Sohrai paintings, Dhokra craft, and tribal décor. Guests can enjoy eco-friendly cottages, traditional cuisine, cultural performances, and guided tours of Netarhat’s scenic spots. A perfect blend of comfort, culture, and nature." },
+
+                { img: "https://tws.edu.in/wp-content/uploads/2024/12/Residential-Campus_2-1.jpg",title: "Dormitory",price: "₹499/bed", description: "Located in the heart of Ranchi, this city dorm offers affordable and comfortable accommodation for students, backpackers, and business travellers. With clean shared spaces, basic amenities, and easy access to transport, it’s the perfect budget-friendly stay option." },
+
+                { img: "https://seawatersports.com/images/activies/slide/camping-in-jharkhand-cost.jpg", title: "Riverside Camping", price: "₹1,299/person", description: "Unwind under the stars with a unique riverside camping experience in Jharkhand. Surrounded by flowing waters and forest views, enjoy bonfires, local cuisine, music, and adventure activities. Perfect for nature lovers, friends, and families seeking an escape into the wild." },
+
+                { img: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/542155345.jpg?k=0fd8b88dadccdbb7d262651c333c298552af3765e9eb23a8c481678c15f689c2&o=", title: "The Heritage – Dumka", price: "₹1,699/night", description: "A 3-star stay offering modern rooms, local cuisine, and warm hospitality in the heart of Dumka. Perfect for families and travellers seeking comfort at an affordable price." },
+
+                { img: "https://lh3.ggpht.com/p/AF1QipNh4FZQWGzXWJFZqrThUtik_mMdfHcLdhOAzUDo=s1024", title: "Glamping Tents", price: "₹2,599/night", description: "Latratu Nature Resort near Jamunia Dam, Khunti, Jharkhand, offers lakeside glamping tents with cozy interiors and modern comforts. Guests can enjoy starlit skies, scenic views, and amenities like a pool, aquapark, and jet skis for a perfect mix of relaxation and adventure." },
+            ];
+
+            const transportData = [
+                { img: "https://content3.jdmagicbox.com/v2/comp/ernakulam/i1/0484px484.x484.250510122033.q8i1/catalogue/2hvcvvtlgmos31b-ib0x8zpu9d.jpg", title: "Motorbike Rentals", price: "800–₹1,200/day", description: "Explore the city at your own pace with affordable motorbike rentals. Ideal for adventure seekers and solo travellers." },
+
+                { img: "https://content.jdmagicbox.com/v2/comp/ajmer/i6/9999px145.x145.240615155903.b8i6/catalogue/kedar-tour-and-travels-vaishali-nagar-ajmer-car-rental-5wfgfublj9-250.jpg", title: "Uber Cab Service", price: "₹1,000–₹1,500.", description: "Book a ride anytime with Uber for safe, comfortable, and cashless city travel. Perfect for quick commutes and hassle-free airport transfers." },
+
+                { img: "https://scontent.fjlr2-2.fna.fbcdn.net/v/t1.6435-9/121551741_1060673684393344_1368691823872331434_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=3a1ebe&_nc_ohc=EJjm0T7Jc9sQ7kNvwFnCvgZ&_nc_oc=AdkEKKpuTQ_xq4Piiy3KEY9U8Ke3J3_arYNRkD-SbaDHLd2ny0gFQg1ZmhW28EZW4f-kHpcE-blvpwRccqzJ4pCO&_nc_zt=23&_nc_ht=scontent.fjlr2-2.fna&_nc_gid=KZQu438GFgRiPou4c-0Ivg&oh=00_AfYkEvzTJ0-x5vxAMhDZRbU8oGh9b-Bdgzu-xgis3BzKgQ&oe=68EF7CC8", title: "Guided Tour Bus",price:"₹500-₹1,500/person" ,description:"Join a guided bus tour for group travel, local insights, and comfortable sightseeing across major attractions."},
+
+                { img: "https://c0.wallpaperflare.com/preview/447/65/129/man-riding-auto-rickshaw-travelling-on-road.jpg", title: "City Auto Rickshaws", price: "₹30-₹80", description: "Convenient and budget-friendly, auto rickshaws are a quick way to navigate busy streets and local markets." },
+
+                { img: "https://sariskapark.com/wp-content/uploads/2020/06/sariska-jeep-safari.jpeg", title: "National Park Jeep Safari", price: "₹1,500–₹3,500", description: "Experience the wild with guided jeep safaris through Jharkhand’s national parks. Spot wildlife and enjoy off-road adventure." },
+
+                { img: "https://thumbs.dreamstime.com/b/bicycle-stop-station-road-chinese-people-foreigner-travelers-rent-biking-travel-visit-shantou-town-swatow-148291514.jpg", title: "Bicycle Rentals", price: "₹500-₹800/day.", description: "Eco-friendly and fun, bicycles are available for rent to enjoy short rides, sightseeing, or exploring scenic trails." },
+            ];
+
+            // --- Reusable Stacked Slider Function ---
+            function initializeStackedSlider(sectionId, data, detailViewId) {
+                const container = document.getElementById(sectionId);
+                const detailView = document.getElementById(detailViewId);
+                if (!container || !detailView) return;
+
+                let currentIndex = 0;
+
+                function renderCards() {
+                    container.innerHTML = ''; // Clear existing cards
+                    data.forEach((item, index) => {
+                        const card = document.createElement('div');
+                        card.className = 'stacked-card';
+                        card.style.backgroundImage = `url(${item.img})`;
+                        card.dataset.index = index;
+                        card.innerHTML = `<div class="card-content"><h3 class="font-primary text-2xl">${item.title}</h3><p>${item.price}</p></div>`;
+                        container.appendChild(card);
+                    });
+                    updateCardPositions();
+                }
+
+                function updateDetails(index) {
+                    const item = data[index];
+                    let buttonsHtml = '';
+                    if (sectionId === 'product-slider') {
+                        buttonsHtml = `
+                             <button class="flex-1 border border-brand-brown text-brand-brown font-semibold py-3 rounded-lg hover:bg-brand-brown hover:text-white transition">Add to Cart</button>
+                             <button class="flex-1 bg-brand-gold text-brand-brown font-semibold py-3 rounded-lg hover:bg-opacity-90 transition">Buy Now</button>
+                        `;
+                    } else if (sectionId === 'stays-slider') {
+                        buttonsHtml = `
+                            <button class="flex-1 bg-brand-gold text-brand-brown font-semibold py-3 rounded-lg hover:bg-opacity-90 transition">Explore</button>
+                        `;
+                    } else {
+                        buttonsHtml = `
+                            <button class="flex-1 bg-brand-gold text-brand-brown font-semibold py-3 rounded-lg hover:bg-opacity-90 transition">Book Now</button>
+                        `;
+                    }
+
+                    detailView.innerHTML = `
+                        <div class="detail-view-content w-full h-full p-4 flex flex-col">
+                            <div class="w-full flex-1 flex flex-row items-start justify-between">
+                                <div class="flex flex-col items-start text-left w-1/2 pr-4">
+                                    <h3 class="text-3xl font-primary text-brand-brown font-semibold">${item.title}</h3>
+                                    <p class="mt-2 text-text-dark/80 text-sm leading-relaxed">${item.description}
+                                        <a href="#" class="text-brand-gold font-semibold ml-1 inline-flex items-center">
+                                            Know more
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 ml-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                            </svg>
+                                        </a>
+                                    </p>
+                                </div>
+                                <img src="${item.img}" alt="${item.title}" class="w-1/2 h-56 object-cover rounded-lg">
+                            </div>
+                            <div class="w-full mt-4">
+                                <p class="text-2xl font-bold text-brand-gold text-left mb-6">${item.price}</p>
+                                <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                                    ${buttonsHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                function updateCardPositions() {
+                    const cards = container.querySelectorAll('.stacked-card');
+                    const numCards = cards.length;
+
+                    cards.forEach((card, index) => {
+                        const pos = (index - currentIndex + numCards) % numCards;
+                        let transform, opacity, zIndex;
+
+                        if (pos === 0) { // Active card
+                            transform = 'translateX(0) scale(1)';
+                            opacity = 1;
+                            zIndex = numCards;
+                        } else if (pos === 1) { // Next card
+                            transform = 'translateX(50%) scale(0.9)';
+                            opacity = 0.5;
+                            zIndex = numCards - 1;
+                        } else if (pos === numCards - 1) { // Previous card
+                            transform = 'translateX(-50%) scale(0.9)';
+                            opacity = 0.5;
+                            zIndex = numCards - 1;
+                        } else { // Other cards
+                            transform = `translateX(0) scale(0.8)`;
+                            opacity = 0;
+                            zIndex = 0;
+                        }
+
+                        card.style.transform = transform;
+                        card.style.opacity = opacity;
+                        card.style.zIndex = zIndex;
+                        card.style.transitionDelay = pos === 0 ? '0.25s' : '0s';
+                    });
+                    updateDetails(currentIndex);
+                }
+
+                function navigate(direction) {
+                    const numCards = data.length;
+                    currentIndex = (currentIndex + direction + numCards) % numCards;
+                    updateCardPositions();
+                }
+
+                container.addEventListener('click', (e) => {
+                    if (e.target.closest('.stacked-card')) {
+                        const clickedCard = e.target.closest('.stacked-card');
+                        const clickedIndex = parseInt(clickedCard.dataset.index);
+                        const numCards = data.length;
+                        const pos = (clickedIndex - currentIndex + numCards) % numCards;
+                        if (pos === 1) navigate(1);
+                        if (pos === numCards - 1) navigate(-1);
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    const sectionEl = document.getElementById(sectionId).closest('section');
+                    if (sectionEl) {
+                        const rect = sectionEl.getBoundingClientRect();
+                        if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
+                            if (e.key === 'ArrowLeft') navigate(-1);
+                            if (e.key === 'ArrowRight') navigate(1);
+                        }
+                    }
+                });
+
+                renderCards();
+            }
+
+            // Initialize all sliders
+            initializeStackedSlider('product-slider', productData, 'product-detail-view');
+            initializeStackedSlider('stays-slider', staysData, 'stays-detail-view');
+            initializeStackedSlider('transport-slider', transportData, 'transport-detail-view');
+        });
+    </script>
+
+</body>
+
+</html>

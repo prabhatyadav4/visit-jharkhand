@@ -1,0 +1,2432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jharkhand Tourism</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+    <style>
+        /* --- Homepage Styles --- */
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #000000;
+            --accent-color-start: #FFFFFF;
+            --accent-color-end: #E0E0E0;
+            --text-light: #f5f5f5;
+            --text-muted: #a0a0a0;
+            --card-background: linear-gradient(145deg, #2b2b2b, #1a1a1a);
+            --input-background: #2C2C2C;
+            --input-border: #444;
+            --border-radius: 20px;
+            --box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            --transition-speed: 0.4s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: white;
+            overflow-x: hidden;
+            background-color: #f8f9fa; /* Base background for consistency */
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 60px;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+        
+        nav:hover {
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo img {
+            width: 6rem;
+            height: auto;
+        }
+
+        .logo-text h1 {
+            font-family: "Playfair Display", serif;
+            font-size: 0.8rem;
+            font-weight: 300;
+        }
+
+        .nav-links {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 80px;
+            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
+        }
+
+        .nav-links.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, -50%) translateY(-20px);
+            pointer-events: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 350;
+            position: relative;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background-color: currentColor;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .plan-trip-link {
+            font-weight: 700 !important;
+        }
+
+        .hamburger {
+            display: block;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            transition: all 0.3s ease-in-out;
+            background-color: white;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 320px;
+            height: 100%;
+            background: var(--primary-color);
+            z-index: 1000;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 80px 40px 40px;
+            border-left: 1px solid #333;
+        }
+
+        .side-menu.open {
+            right: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+            color: #ccc;
+        }
+
+        .side-menu .auth-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #444;
+        }
+
+        .user-info {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info .user-icon {
+            width: 50px;
+            height: 50px;
+            background: #444;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .user-info .user-name {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .side-menu .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--accent-color-start);
+            color: #111;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .side-menu .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .side-menu .signup-link {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .side-menu .signup-link:hover {
+            text-decoration: underline;
+        }
+
+        .side-menu .side-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .side-menu .side-nav-links a {
+            color: #f0f0f0;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        .side-menu .side-nav-links a:hover {
+            background-color: #2a2a2a;
+            color: #fff;
+        }
+
+        .side-menu .side-nav-links a svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 1.5;
+            color: #a0a0a0;
+            transition: color 0.3s;
+        }
+
+        .side-menu .side-nav-links a:hover svg {
+            color: #fff;
+        }
+
+        .hero-text {
+            font-weight: 700;
+            margin: auto;
+            text-align: center;
+            max-width: 800px;
+            line-height: 1.2;
+            z-index: 1;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .hero-text.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            visibility: hidden;
+        }
+
+        .hero-text1 {
+            font-size: 4.5rem;
+        }
+        
+        .hero-text2 {
+            font-size: 3rem;
+            font-weight: 400;
+        }
+
+        .side-menu-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+
+        .social-links a {
+            color: #a0a0a0;
+            display: inline-block;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .social-links svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .footer-text {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* --- Login Modal Styles --- */
+        #login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            background-color: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            will-change: opacity;
+        }
+
+        #login-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #login-modal.show .login-wrapper {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .login-wrapper {
+            perspective: 1500px;
+            width: 100%;
+            max-width: 450px;
+            height: 680px;
+            z-index: 2;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            transform: scale(0.95);
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        .login-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.9s ease-in-out;
+            will-change: transform;
+        }
+
+        .login-container.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid #333;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            padding: 20px 40px;
+        }
+        
+        .close-login-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #a0a0a0;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.3s;
+        }
+        .close-login-btn:hover {
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .header {
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card-back .header {
+            margin-bottom: 15px;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            color: var(--text-light);
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .header-logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 50px;
+            padding: 5px;
+        }
+
+        .tabs button {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .tabs button.active {
+            background: linear-gradient(45deg, var(--accent-color-start), var(--accent-color-end));
+            color: #000;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .form-content {
+            width: 100%;
+            display: none;
+        }
+
+        .form-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .name-group {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .name-group .input-group {
+            flex: 1;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid var(--input-border);
+            border-radius: 50px;
+            font-size: 1rem;
+            color: var(--text-light);
+            background: var(--input-background);
+            transition: all var(--transition-speed);
+        }
+
+        .input-group textarea {
+            border-radius: var(--border-radius);
+            min-height: 80px;
+            padding-top: 15px;
+        }
+
+        .input-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            border-color: var(--accent-color-start);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+        }
+        
+        .input-group label {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .input-group textarea ~ label {
+             top: 25px;
+        }
+
+        .input-group input:focus ~ label, .input-group input:not(:placeholder-shown) ~ label,
+        .input-group select:focus ~ label, .input-group select:not([value=""]):valid ~ label,
+        .input-group textarea:focus ~ label, .input-group textarea:not(:placeholder-shown) ~ label {
+            top: -10px;
+            left: 15px;
+            font-size: 0.8rem;
+            color: var(--accent-color-start);
+            padding: 0 5px;
+            background: #2b2b2b;
+        }
+
+        .address-group {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out;
+            margin-bottom: 0;
+        }
+
+        .address-group.show {
+            max-height: 120px; /* Adjust based on textarea height */
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000;
+            background: linear-gradient(45deg, var(--accent-color-start), var(--accent-color-end));
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .forgot-password a, .toggle-form a, .bypass-login a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+        .forgot-password a:hover, .toggle-form a:hover, .bypass-login a:hover {
+            color: var(--accent-color-start);
+            text-decoration: underline;
+        }
+        
+        .forgot-password { text-align: right; width: 100%; margin-bottom: 20px; font-size: 0.9rem; }
+        .toggle-form, .bypass-login { margin-top: 15px; font-size: 0.9rem; cursor: pointer; }
+        .toggle-form a, .bypass-login a { font-weight: 600; }
+
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.3);
+            border-top: 4px solid #000;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        /* --- Showcase Section Styles --- */
+        .showcase-section {
+            font-family: 'Poppins', sans-serif;
+        }
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            height: 680px;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .card-image {
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover .card-image {
+            transform: scale(1.05);
+        }
+
+        /* --- Itinerary Planner Styles --- */
+        .itinerary-planner-section {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4ff;
+        }
+        .interests-dropdown .selected-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            min-height: 50px;
+        }
+        .interests-dropdown .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            width: 100%;
+            z-index: 10;
+            margin-top: 4px;
+        }
+        .tag {
+            background-color: #3b82f6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+        }
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        .itinerary-day {
+            opacity: 0; /* Start hidden for animation */
+        }
+        #itinerary-content {
+            max-height: 80vh; 
+            overflow-y: auto;
+        }
+        #itinerary-content::-webkit-scrollbar {
+          width: 8px;
+        }
+        #itinerary-content::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        #itinerary-content::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 10px;
+        }
+        #itinerary-content::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+
+        /* --- Places to Go Section Styles --- */
+        .places-to-go-section {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            padding: 2rem;
+        }
+        .places-to-go-section .container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.07);
+            padding: 2.5rem;
+            margin: 0 auto;
+        }
+        .places-to-go-section h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .region-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 2.5rem;
+            background-color: #f0f0f0;
+            padding: 8px;
+            border-radius: 50px;
+            width: max-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .region-selector button {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background-color: transparent;
+            color: #555;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .region-selector button.active,
+        .region-selector button:hover {
+            background-color: #ff9933;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.4);
+            transform: translateY(-2px);
+        }
+        .main-content {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            position: relative; 
+        }
+        .map-container {
+            flex: 1;
+            max-width: 45%;
+        }
+        #map {
+            width: 100%;
+            height: 550px;
+            background-color: #f0f0f0;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+        .division-label {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #2d3748;
+            text-shadow: 0 0 3px white, 0 0 3px white;
+        }
+        @keyframes pop-in {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .location-pin-wrapper {
+            animation: pop-in 0.4s ease-out forwards;
+            transform-origin: bottom center;
+        }
+        .location-pin-icon {
+            width: 32px;
+            height: 40px;
+        }
+        @keyframes pulse-pin {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .pin-animation {
+            animation: pulse-pin 0.5s ease-in-out;
+            transform-origin: bottom center;
+        }
+        .info-panel {
+            flex: 1.5;
+            padding-left: 2rem;
+            position: relative; 
+        }
+        .content-wrapper {
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+        .content-wrapper.fade-out {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        #division-name {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ff9933;
+            margin: 0 0 1rem 0;
+        }
+        #division-description {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #666;
+            min-height: 100px;
+            margin-bottom: 1.5rem;
+        }
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        @keyframes highlight-card {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            }
+            50% {
+                transform: translateY(-12px) scale(1.05);
+                box-shadow: 0 12px 30px rgba(255, 153, 51, 0.5);
+            }
+        }
+        .places-to-go-section .card.highlight-animation {
+            animation: highlight-card 1s ease-in-out;
+        }
+        .places-to-go-section .card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: auto; /* Overwrite previous card height */
+        }
+        .places-to-go-section .card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        .places-to-go-section .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+        .places-to-go-section .card .caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            color: white;
+            padding: 25px 10px 10px 10px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* --- Animations --- */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Media Queries --- */
+        @media (max-width: 992px) {
+            .nav-links { display: none; }
+            .main-content { flex-direction: column; text-align: center; }
+            .map-container { max-width: 100%; width: 100%; }
+            #map { height: 400px; }
+            .info-panel { padding-left: 0; width: 100%; max-width: 600px; }
+        }
+        @media (max-width: 768px) {
+            .hero-text1 { font-size: 3rem; }
+            .hero-text2 { font-size: 2rem; }
+            .hero-text { padding: 0 20px; }
+            nav { padding: 15px 30px; }
+            .logo img { width: 5rem; }
+            .logo-text h1 { font-size: 0.7rem; }
+        }
+        
+        @media (max-width: 600px) {
+            .places-to-go-section { padding: 1rem; }
+            .places-to-go-section .container { padding: 1.5rem; }
+            .region-selector { flex-wrap: wrap; padding: 10px; }
+            .image-gallery { grid-template-columns: 1fr; }
+            #division-name { font-size: 2.5rem; }
+
+            .side-menu {
+                width: 100%;
+                padding: 80px 30px 30px;
+            }
+            .login-wrapper {
+                 height: auto;
+                 max-width: 90%;
+            }
+            .card-front, .card-back {
+                padding: 30px;
+                height: auto;
+                min-height: 600px;
+            }
+        }
+    </style>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F9FA;
+        }
+
+        /* --- Styles from stories.html --- */
+        .testimonial-content {
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .testimonial-content.fade-out {
+            opacity: 0;
+        }
+        
+        /* Animate elements as they scroll into view */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Slider drag cursor */
+        .slider-card.dragging {
+            user-select: none;
+        }
+        /* Removed grab cursor and prevented text selection */
+        .slider-card {
+            cursor: default;
+            user-select: none;
+        }
+        
+        /* Image hover effect */
+        .testimonial-image {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .testimonial-image:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Influencer card hover effect */
+        .influencer-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .influencer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Styles from faq.html --- */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .faq-item.open .faq-answer {
+            max-height: 1000px; /* Large enough for content */
+        }
+        .faq-item.open .chevron {
+            transform: rotate(180deg);
+        }
+        .chevron {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* --- Styles from footer.html --- */
+        .footer-bg {
+            background-color: #1a202c; /* A dark blue-gray */
+        }
+        .newsletter-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://tourism.jharkhand.gov.in/images/netarhat.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="hero">
+        <video class="hero-video" autoplay loop muted playsinline>
+            <source src="https://assets.mixkit.co/active_storage/video_items/100408/1724196459/100408-video-720.mp4"
+                type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-overlay"></div>
+
+        <nav class="transparent">
+            <div class="logo">
+                <img src="/assets/jtdc logo.png" alt="Jharkhand Tourism Logo">
+                <div class="logo-text">
+                    <h1>Jharkhand Tourism</h1>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="/assets/explore.html">Explore</a>
+                <a href="/assets/marketplace.html">Marketplace</a>
+                <a href="#planner" class="plan-trip-link">PLAN YOUR TRIP</a>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+        
+        <div class="side-menu">
+            <div class="close-btn">&times;</div>
+            <div class="auth-section">
+                <div class="user-info">
+                    <div class="user-icon">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <span class="user-name">Welcome, Traveler!</span>
+                </div>
+                <div class="login-signup">
+                    <button class="login-btn">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                        User Login
+                    </button>
+                    <a class="signup-link">Don't have an account? Sign Up</a>
+                </div>
+            </div>
+            <div class="side-nav-links">
+                <a href="/assets/wallet.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>Wallet</a>
+                <a href="#planner"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>Plan Your Trip</a>
+                <a href="#places2go"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>Places to Go</a>
+                <a href="/assets/marketplace.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-3z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>Marketplace</a>
+                <a href="/assets/explore.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>Explore</a>
+            </div>
+            <div class="side-menu-footer">
+                <div class="social-links">
+                    <a href="#" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                    <a href="#" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                    <a href="#" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+                </div>
+                <p class="footer-text">© 2025 Jharkhand Tourism</p>
+            </div>
+        </div>
+
+        <div class="hero-text">
+            <div class="hero-text1">Visit Jharkhand -</div>
+            <div class="hero-text2">The Nature's Hidden Jewel</div>
+        </div>
+    </section>
+    <section class="showcase-section bg-gray-50 text-gray-800">
+         <div class="container mx-auto px-4 py-16">
+            <header class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Jharkhand's Stunning Wonders</h1>
+                <p class="text-lg text-gray-600 mt-2">Discover the hidden gems and vibrant culture of the land of forests.</p>
+            </header>
+
+            <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+                <div class="card bg-black text-white rounded-xl overflow-hidden group relative cursor-pointer">
+                    <div class="absolute inset-0">
+                        <img class="card-image w-full h-full object-cover" src="https://i.pinimg.com/736x/a1/13/67/a11367818e26a6ba5799d37077d2c18a.jpg" alt="Lush green hills of Netarhat">
+                    </div>
+                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                    <div class="relative p-6 md:p-8 h-full flex flex-col justify-end">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-2">Explore Verdant Vistas</h2>
+                        <p class="text-base text-gray-200 leading-relaxed">
+                            Lose yourself in breathtaking landscapes, from the misty hills of Netarhat, the 'Queen of Chotanagpur', to the majestic waterfalls like Hundru and Dassam that dot the region.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card bg-black text-white rounded-xl overflow-hidden group relative cursor-pointer">
+                    <div class="absolute inset-0">
+                        <img class="card-image w-full h-full object-cover" src="https://d35l77wxi0xou3.cloudfront.net/collab/craft1575447804Dhokra%20Showcase%201.jpg" alt="Tribal Chhau dancers in traditional attire">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                    <div class="relative p-6 md:p-8 h-full flex flex-col justify-end">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-2">Experience Rich Traditions</h2>
+                        <p class="text-base text-gray-200 leading-relaxed">
+                            Immerse yourself in the vibrant heritage of Jharkhand's tribal communities. Witness colourful festivals, intricate Sohrai paintings, and the energetic Chhau dance, a UNESCO recognized art form.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="card bg-black text-white rounded-xl overflow-hidden group relative cursor-pointer">
+                    <div class="absolute inset-0">
+                        <img class="card-image w-full h-full object-cover" src="https://thumbs.dreamstime.com/b/baidyanath-temple-deoggar-god-shib-thakurs-other-god-godes-temple-baidyanath-temple-deoghar-india-322565426.jpg" alt="Baidyanath Temple in Deoghar at night">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                    <div class="relative p-6 md:p-8 h-full flex flex-col justify-end">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-2">Discover Sacred Sanctuaries</h2>
+                        <p class="text-base text-gray-200 leading-relaxed">
+                            Journey through ancient temples and sacred sites. Explore Baidyanath Dham, a revered Hindu pilgrimage destination, and the serene Parasnath Hills, a significant center for Jainism.
+                        </p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </section>
+    <section id="planner" class="itinerary-planner-section text-gray-700">
+        <div class="container mx-auto p-4 md:p-8">
+            <header class="text-center mb-10 animate-fadeInUp">
+                <div class="inline-block bg-blue-100 text-blue-600 text-sm font-semibold px-4 py-1 rounded-full mb-3">
+                    <span class="mr-2">✨</span>AI-Powered Technology
+                </div>
+                <h1 class="text-3xl md:text-5xl font-bold text-gray-900">Your Perfect Trip, Planned in Minutes</h1>
+                <p class="text-md md:text-lg text-gray-500 mt-3 max-w-2xl mx-auto">Our AI analyzes your preferences, weather conditions, and local events to create the perfect personalized itinerary.</p>
+            </header>
+    
+            <div id="main-content" class="grid grid-cols-1 gap-8 transition-all duration-500">
+                <div id="preferences-container" class="bg-white p-6 md:p-8 rounded-2xl shadow-lg w-full max-w-4xl mx-auto animate-fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="flex items-center mb-6">
+                        <svg class="w-7 h-7 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 16v-2m0-10v2m0 6v2m6-10h2m-16 0h2m14 0h2M12 20l4-4m0 0l4-4m-4 4H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        <h2 class="text-xl font-bold text-gray-800">Tell Us Your Preferences</h2>
+                    </div>
+                    
+                    <div class="space-y-6">
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="start-date" class="block text-sm font-medium text-gray-600 mb-1">Start Date</label>
+                                <input type="text" id="start-date" placeholder="Select start date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            </div>
+                            <div>
+                                <label for="end-date" class="block text-sm font-medium text-gray-600 mb-1">End Date</label>
+                                <input type="text" id="end-date" placeholder="Select end date" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            </div>
+                        </div>
+    
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="trip-duration" class="block text-sm font-medium text-gray-600 mb-1">Trip Duration</label>
+                                <input type="text" id="trip-duration" class="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg" readonly placeholder="Calculated automatically">
+                            </div>
+                            <div>
+                               <label for="travelers" class="block text-sm font-medium text-gray-600 mb-1">Number of Travelers</label>
+                                <input type="number" id="travelers" value="1" min="1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            </div>
+                        </div>
+    
+                        <div class="relative interests-dropdown">
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Your Interests</label>
+                            <div id="interest-selector" class="selected-items">
+                                <span class="text-gray-400">Select your interests...</span>
+                            </div>
+                            <div id="interest-menu" class="dropdown-menu p-4 space-y-2">
+                                <label class="flex items-center"><input type="checkbox" value="History & Culture" class="mr-2"> History & Culture</label>
+                                <label class="flex items-center"><input type="checkbox" value="Nature & Outdoors" class="mr-2"> Nature & Outdoors</label>
+                                <label class="flex items-center"><input type="checkbox" value="Food & Culinary" class="mr-2"> Food & Culinary</label>
+                                <label class="flex items-center"><input type="checkbox" value="Adventure Sports" class="mr-2"> Adventure Sports</label>
+                                <label class="flex items-center"><input type="checkbox" value="Art & Museums" class="mr-2"> Art & Museums</label>
+                                <label class="flex items-center"><input type="checkbox" value="Shopping" class="mr-2"> Shopping</label>
+                            </div>
+                        </div>
+    
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="pace" class="block text-sm font-medium text-gray-600 mb-1">Preferred Pace</label>
+                                <select id="pace" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                    <option value="relaxed">Relaxed & Leisurely</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="fast">Fast-Paced & Packed</option>
+                                </select>
+                            </div>
+                             <div>
+                                <label for="budget" class="block text-sm font-medium text-gray-600 mb-1">Budget Level</label>
+                                <select id="budget" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                    <option value="budget">Budget Traveler</option>
+                                    <option value="mid">Mid-Range</option>
+                                    <option value="luxury">Luxury Experience</option>
+                                </select>
+                            </div>
+                        </div>
+                         <div>
+                            <label for="requests" class="block text-sm font-medium text-gray-600 mb-1">Special Requests</label>
+                            <textarea id="requests" rows="3" placeholder="e.g., wheelchair accessibility, kid-friendly activities..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
+                        </div>
+                    </div>
+    
+                    <button id="generate-btn" class="w-full mt-8 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.657 7.343A8 8 0 0118 12c0 2.21-.895 4.21-2.343 5.657z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18a6 6 0 100-12 6 6 0 000 12z"></path></svg>
+                        Generate My Itinerary
+                    </button>
+                </div>
+    
+                <div id="itinerary-container" class="bg-transparent hidden">
+                     <div id="itinerary-placeholder" class="bg-white p-6 md:p-8 rounded-2xl shadow-lg text-center flex flex-col items-center justify-center h-full">
+                         <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <h3 class="text-xl font-bold text-gray-800">Your Itinerary Will Appear Here</h3>
+                        <p class="text-gray-500 mt-2">Fill out your preferences to see your personalized travel plan.</p>
+                    </div>
+                    <div id="itinerary-content" class="hidden bg-white p-6 md:p-8 rounded-2xl shadow-lg">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="places-to-go-section" id="places2go">
+        <div class="container">
+            <h1 class="text-4xl">Destination by Division</h1>
+            <div class="region-selector">
+                 <button data-region="palamu-division" class="active">Palamu</button>
+                <button data-region="north-chotanagpur-division">North Chotanagpur</button>
+                <button data-region="south-chotanagpur-division">South Chotanagpur</button>
+                <button data-region="kolhan-division">Kolhan</button>
+                <button data-region="santhal-pargana-division">Santhal Pargana</button>
+            </div>
+            <div class="main-content">
+                <div class="map-container">
+                     <div id="map"></div>
+                </div>
+                <div class="info-panel">
+                    <div class="content-wrapper">
+                        <h2 id="division-name"></h2>
+                        <p id="division-description"></p>
+                        <div class="image-gallery">
+                            <div class="card">
+                                <img id="image1" src="" alt="Destination Image 1">
+                                <span id="caption1" class="caption"></span>
+                            </div>
+                            <div class="card">
+                                <img id="image2" src="" alt="Destination Image 2">
+                                <span id="caption2" class="caption"></span>
+                            </div>
+                            <div class="card">
+                                <img id="image3" src="" alt="Destination Image 3">
+                                <span id="caption3" class="caption"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 md:py-24">
+        <div class="container mx-auto px-4">
+            <header class="text-center mb-12 reveal">
+                <div class="inline-block bg-purple-100 text-purple-600 text-sm font-semibold px-4 py-1 rounded-full mb-3">
+                    ✈️ Traveler Stories
+                </div>
+                <h1 class="text-3xl md:text-5xl font-bold text-gray-900">Real Stories, Real Adventures</h1>
+                <p class="text-md md:text-lg text-gray-500 mt-3 max-w-2xl mx-auto">Discover how travelers from around the world experienced Jharkhand's magic.</p>
+            </header>
+
+            <div id="slider-card" class="slider-card max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg relative reveal">
+                <div id="testimonial-content-container" class="testimonial-content">
+                    </div>
+                 <div class="flex justify-between items-center mt-6">
+                    <div id="slider-dots" class="flex space-x-2">
+                        </div>
+                    <div class="flex space-x-2">
+                        <button id="prev-btn" class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <button id="next-btn" class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition">
+                             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-20 md:mt-28">
+                 <header class="text-center mb-12 reveal">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Endorsed by Travel Influencers</h2>
+                </header>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <div class="influencer-card bg-white p-6 rounded-xl shadow-md text-center reveal">
+                        <img src="https://picsum.photos/seed/shikha/80/80" class="w-20 h-20 rounded-full mx-auto mb-4" alt="Shikha Nath">
+                        <h3 class="font-bold text-gray-800 flex items-center justify-center">Shikha Nath <svg class="ml-1 w-5 h-5 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm6.92,8.48-6.84,7.7a.51.51,0,0,1-.78,0L7.08,14a.5.5,0,0,1,.78-.62l3.73,3.31,6.46-7.25a.5.5,0,0,1,.71.64Z"/></svg></h3>
+                        <p class="text-sm text-gray-500">@wandering.shikha • 125k Followers</p>
+                        <p class="text-gray-600 mt-4 text-sm italic">"Finally, a platform that showcases India’s hidden treasures. Jharkhand’s tribal culture deserves this spotlight!"</p>
+                    </div>
+                    <div class="influencer-card bg-white p-6 rounded-xl shadow-md text-center reveal">
+                        <img src="https://picsum.photos/seed/passports/80/80" class="w-20 h-20 rounded-full mx-auto mb-4" alt="Bruised Passports">
+                         <h3 class="font-bold text-gray-800 flex items-center justify-center">Bruised Passports <svg class="ml-1 w-5 h-5 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm6.92,8.48-6.84,7.7a.51.51,0,0,1-.78,0L7.08,14a.5.5,0,0,1,.78-.62l3.73,3.31,6.46-7.25a.5.5,0,0,1,.71.64Z"/></svg></h3>
+                        <p class="text-sm text-gray-500">@bruisedpassports • 1.1M Followers</p>
+                        <p class="text-gray-600 mt-4 text-sm italic">"The AI-powered planning is a game-changer. Our Jharkhand series got 200k+ views!"</p>
+                    </div>
+                    <div class="influencer-card bg-white p-6 rounded-xl shadow-md text-center reveal">
+                        <img src="https://picsum.photos/seed/larissa/80/80" class="w-20 h-20 rounded-full mx-auto mb-4" alt="Larissa D'Sa">
+                        <h3 class="font-bold text-gray-800 flex items-center justify-center">Larissa D'Sa <svg class="ml-1 w-5 h-5 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm6.92,8.48-6.84,7.7a.51.51,0,0,1-.78,0L7.08,14a.5.5,0,0,1,.78-.62l3.73,3.31,6.46-7.25a.5.5,0,0,1,.71.64Z"/></svg></h3>
+                        <p class="text-sm text-gray-500">@larissa_dsa • 670k Followers</p>
+                        <p class="text-gray-600 mt-4 text-sm italic">"Jharkhand Tourism is setting new standards for responsible and innovative travel experiences."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="stats-section" class="bg-gray-800 text-white py-12 md:py-16 mt-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold text-green-400">4.9/5</h2>
+                    <p class="text-gray-300 mt-1">Average Rating</p>
+                </div>
+                <div class="reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold text-green-400">10,000+</h2>
+                    <p class="text-gray-300 mt-1">Happy Travelers</p>
+                </div>
+                 <div class="reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold text-green-400">98%</h2>
+                    <p class="text-gray-300 mt-1">Would Recommend</p>
+                </div>
+                 <div class="reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold text-green-400">2.5M+</h2>
+                    <p class="text-gray-300 mt-1">Social Media Reach</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="py-16 md:py-24">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <header class="text-center mb-12">
+                <div class="inline-block bg-blue-100 text-blue-600 text-sm font-semibold px-4 py-1 rounded-full mb-3">
+                    Frequently Asked Questions
+                </div>
+                <h1 class="text-3xl md:text-5xl font-bold text-gray-900">Got Questions? We Have Answers</h1>
+                <p class="text-md md:text-lg text-gray-500 mt-3">Get instant answers from our local guides and travel experts.</p>
+            </header>
+
+            <div class="relative mb-10">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <input type="text" placeholder="Ask anything about Jharkhand travel..." class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition">
+                <p class="text-xs text-gray-400 mt-1 ml-2">💡 AI-powered search predicts your travel concerns</p>
+            </div>
+
+            <div id="faq-tabs" class="flex flex-wrap justify-center gap-2 md:gap-3 mb-10">
+                 <button data-category="safety" class="tab-btn flex items-center gap-2 bg-white text-gray-600 px-4 py-2 text-sm font-semibold rounded-full border border-gray-200 hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a11.955 11.955 0 0118 0 12.02 12.02 0 00-2.618-14.968z"></path></svg>
+                    Safety & Security
+                 </button>
+                 <button data-category="trip-planning" class="tab-btn flex items-center gap-2 bg-orange-500 text-white px-4 py-2 text-sm font-semibold rounded-full shadow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Trip Planning
+                </button>
+                 <button data-category="booking" class="tab-btn flex items-center gap-2 bg-white text-gray-600 px-4 py-2 text-sm font-semibold rounded-full border border-gray-200 hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Booking & Payment
+                </button>
+                 <button data-category="transport" class="tab-btn flex items-center gap-2 bg-white text-gray-600 px-4 py-2 text-sm font-semibold rounded-full border border-gray-200 hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2 2h8a1 1 0 001-1z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h2a1 1 0 001-1V7a1 1 0 00-1-1h-2"></path></svg>
+                    Travel & Transport
+                </button>
+                 <button data-category="accommodation" class="tab-btn flex items-center gap-2 bg-white text-gray-600 px-4 py-2 text-sm font-semibold rounded-full border border-gray-200 hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Accommodation
+                </button>
+                 <button data-category="activities" class="tab-btn flex items-center gap-2 bg-white text-gray-600 px-4 py-2 text-sm font-semibold rounded-full border border-gray-200 hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    Culture & Activities
+                </button>
+            </div>
+
+            <div id="faq-container" class="space-y-4">
+                </div>
+
+        </div>
+    </section>
+
+    <section class="py-16">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <div class="bg-gradient-to-r from-gray-800 to-gray-700 text-white p-8 md:p-12 rounded-2xl text-center shadow-2xl">
+                <h2 class="text-3xl font-bold mb-3">Still Have Questions?</h2>
+                <p class="text-gray-300 mb-6 max-w-md mx-auto">Our travel experts are available 24/7 to help you plan the perfect trip.</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <button class="bg-white text-gray-800 font-semibold px-6 py-3 rounded-lg w-full sm:w-auto hover:bg-gray-200 transition">Chat with Expert</button>
+                    <button class="border border-gray-500 text-white font-semibold px-6 py-3 rounded-lg w-full sm:w-auto hover:bg-gray-600 transition">Call +91 98765 43210</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <footer class="footer-bg text-gray-300">
+        <section class="newsletter-section py-12">
+            <div class="container mx-auto px-4 text-center text-white">
+                <h2 class="text-3xl md:text-4xl font-bold mb-2">Stay Connected with Jharkhand</h2>
+                <p class="mb-6">Get exclusive travel tips, hidden gem discoveries, and special offers delivered to your inbox.</p>
+                <form class="flex flex-col sm:flex-row justify-center max-w-lg mx-auto">
+                    <input type="email" placeholder="Enter your email address" class="w-full sm:w-2/3 px-4 py-3 rounded-lg sm:rounded-r-none text-gray-800 outline-none focus:ring-2 focus:ring-orange-400">
+                    <button type="submit" class="w-full sm:w-1/3 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg sm:rounded-l-none mt-2 sm:mt-0 transition">Subscribe</button>
+                </form>
+                 <p class="text-xs mt-3 text-gray-300">Join 25,000+ travelers. Unsubscribe anytime.</p>
+            </div>
+        </section>
+
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+                <div class="col-span-2 md:col-span-4 lg:col-span-2">
+                    <h3 class="font-bold text-xl text-white mb-4 flex items-center gap-3">
+                        <img src="/assets/jtdc logo.png" alt="Jharkhand Tourism Logo" class="h-8 w-12">
+                        Jharkhand Tourism
+                    </h3>
+                    <p class="text-sm leading-relaxed pr-4">Discover India's hidden paradise through AI-powered travel planning for unforgettable tribal cultural experiences.</p>
+                    <div class="mt-6">
+                        <p class="font-semibold text-white mb-2">Follow Our Journey</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-orange-400 transition" aria-label="Facebook">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v2.385z"></path></svg>
+                            </a>
+                             <a href="#" class="text-gray-400 hover:text-orange-400 transition" aria-label="Twitter">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616v.064c0 2.298 1.634 4.215 3.793 4.653-.527.143-1.093.186-1.668.063.605 1.885 2.362 3.26 4.448 3.3-1.623 1.273-3.666 2.03-5.882 2.03-.38 0-.755-.022-1.124-.067 2.094 1.342 4.585 2.123 7.243 2.123 8.693 0 13.45-7.223 13.195-13.835 1.056-.763 1.802-1.672 2.322-2.718z"></path></svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-orange-400 transition" aria-label="Instagram">
+                               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.058-1.689-.072-4.948-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+                            </a>
+                             <a href="#" class="text-gray-400 hover:text-orange-400 transition" aria-label="Youtube">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-white mb-4">Destinations</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-orange-400">Netarhat Hill Station</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Patratu Valley</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Betla National Park</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Deoghar Temples</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Ranchi City Tour</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Jamshedpur Industrial</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 class="font-bold text-white mb-4">Experiences</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-orange-400">Wildlife Safaris</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Cultural Tours</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Adventure Sports</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Photography Tours</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Spiritual Journeys</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 class="font-bold text-white mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-orange-400">Help Center</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Safety Guidelines</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Travel Insurance</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Booking Support</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Emergency Contacts</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Feedback</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 class="font-bold text-white mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-orange-400">About Us</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Our Mission</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Local Partners</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Careers</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Press Kit</a></li>
+                        <li><a href="#" class="hover:text-orange-400">Sustainability</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-700">
+            <div class="container mx-auto px-6 py-10 grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold text-white mb-4">Get In Touch</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start"><svg class="w-5 h-5 mt-1 mr-3 text-orange-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> <div><span class="font-semibold">Office Address</span><br>Tourism Bhawan, Sector 1, HEC, Ranchi - 834004, Jharkhand, India</div></li>
+                        <li class="flex items-start"><svg class="w-5 h-5 mt-1 mr-3 text-orange-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg> <div><span class="font-semibold">24/7 Support</span><br>+91 98765 43210</div></li>
+                        <li class="flex items-start"><svg class="w-5 h-5 mt-1 mr-3 text-orange-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg> <div><span class="font-semibold">WhatsApp</span><br>+91 98765 43212</div></li>
+                        <li class="flex items-start"><svg class="w-5 h-5 mt-1 mr-3 text-orange-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> <div><span class="font-semibold">Email Support</span><br>hello@jharkhandtourism.com</div></li>
+                         <li class="flex items-start"><svg class="w-5 h-5 mt-1 mr-3 text-orange-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg> <div><span class="font-semibold">Emergency Helpline</span><br>1800-419-8242</div></li>
+                    </ul>
+                </div>
+                <div>
+                     <h4 class="font-bold text-white mb-4">Find Us</h4>
+                     <div class="rounded-lg overflow-hidden h-64 border-2 border-gray-700 relative">
+                        <div class="absolute top-4 left-4 bg-white text-gray-800 p-3 rounded-lg shadow-lg z-10 max-w-xs">
+                            <p class="font-bold text-sm">23°20'38.8"N 85°18'34.6"E</p>
+                            <p class="text-xs text-gray-600">88V5+JRQ Ranchi, Jharkhand</p>
+                            <div class="mt-2 border-t pt-2 flex justify-between items-center">
+                                <a href="https://www.google.com/maps?q=Jharkhand+Tourism+Development+Corporation+Ltd" target="_blank" rel="noopener noreferrer" class="text-sm text-blue-600 hover:underline">View larger map</a>
+                                <a href="https://www.google.com/maps/dir//Jharkhand+Tourism+Development+Corporation+Ltd" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-blue-600 flex items-center gap-1 hover:underline">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16.096 12.821l-3.95-3.939c-.586-.583-1.638-.22-1.638.61v2.508H4c-.552 0-1 .447-1 1s.448 1 1 1h6.508v2.508c0 .829 1.052 1.193 1.638.61l3.95-3.939c.313-.311.313-.815 0-1.126zM20 2H4C2.897 2 2 2.897 2 4v16c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 18H4V4h16v16z"></path></svg>
+                                    Directions
+                                </a>
+                            </div>
+                        </div>
+                        <iframe src="https://maps.google.com/maps?q=23.355028,85.309611&z=15&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-700">
+            <div class="container mx-auto px-6 py-8">
+                <h4 class="font-bold text-center text-white mb-6">Trusted & Certified</h4>
+                <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-center text-xs">
+                    <div class="flex flex-col items-center gap-2"><svg class="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path></svg> Government of Jharkhand<br>Tourism Board</div>
+                    <div class="flex flex-col items-center gap-2"><svg class="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg> Ministry of Tourism, India<br>Incredible India Certified</div>
+                    <div class="flex flex-col items-center gap-2"><svg class="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ISO 9001:2015 Certified<br>Quality Management</div>
+                    <div class="flex flex-col items-center gap-2"><svg class="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Sustainable Tourism Certified<br>Eco-Friendly Practices</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-black py-6">
+            <div class="container mx-auto px-6 text-sm text-gray-400">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-center md:text-left">© 2025 Jharkhand Tourism. All rights reserved. Made with <span class="text-red-500">❤️</span> for travelers.</p>
+                    <div class="flex space-x-4 mt-4 md:mt-0">
+                        <a href="#" class="hover:text-white">Privacy Policy</a>
+                        <a href="#" class="hover:text-white">Terms of Service</a>
+                        <a href="#" class="hover:text-white">Cookie Policy</a>
+                        <a href="#" class="hover:text-white">Accessibility</a>
+                    </div>
+                </div>
+                 <div class="border-t border-gray-800 mt-6 pt-6 flex flex-wrap justify-center md:justify-between items-center gap-4">
+                    <div class="flex items-center gap-2"><svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg> <span class="font-semibold">Award Winning:</span> Best State Tourism Promotion 2024</div>
+                    <div class="flex items-center gap-2"><svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg> <span class="font-semibold">100% Secure:</span> SSL Encrypted & PCI Compliant</div>
+                    <div class="flex items-center gap-2"><svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg> <span class="font-semibold">24/7 Support:</span> Always here to help you</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div id="login-modal">
+        <div class="login-wrapper">
+            <div class="login-container">
+                <div class="card-front">
+                    <div class="close-login-btn">&times;</div>
+                    <div class="header">
+                        <img src="assets/jtdc logo.png" alt="Jharkhand Tourism Logo" class="header-logo">
+                        <h1>Jharkhand Tourism</h1>
+                        <p>Login to your account</p>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="active" data-role="User">User</button>
+                        <button data-role="vendor">Vendor</button>
+                        <button data-role="admin">Admin</button>
+                    </div>
+
+                    <div id="User-form" class="form-content active">
+                        <form>
+                            <div class="input-group">
+                                <input type="email" placeholder=" " required>
+                                <label>Email Address</label>
+                            </div>
+                            <div class="input-group">
+                                <input type="password" class="password-input" placeholder=" " required>
+                                <label>Password</label>
+                                <span class="password-toggle"><i class="fas fa-eye"></i></span>
+                            </div>
+                            <div class="forgot-password"><a href="#">Forgot Password?</a></div>
+                            <button type="submit" class="btn">Login</button>
+                        </form>
+                    </div>
+                    
+                    <div id="vendor-form" class="form-content">
+                         <form>
+                            <div class="input-group">
+                                <input type="email" placeholder=" " required>
+                                <label>Vendor Email</label>
+                            </div>
+                            <div class="input-group">
+                                <input type="password" class="password-input" placeholder=" " required>
+                                <label>Password</label>
+                                <span class="password-toggle"><i class="fas fa-eye"></i></span>
+                            </div>
+                            <div class="forgot-password"><a href="#">Forgot Password?</a></div>
+                            <button type="submit" class="btn">Login as Vendor</button>
+                        </form>
+                    </div>
+                    
+                    <div id="admin-form" class="form-content">
+                       <form>
+                            <div class="input-group">
+                                <input type="email" placeholder=" " required>
+                                <label>Admin Email</label>
+                            </div>
+                            <div class="input-group">
+                                <input type="password" class="password-input" placeholder=" " required>
+                                <label>Password</label>
+                                <span class="password-toggle"><i class="fas fa-eye"></i></span>
+                            </div>
+                            <div class="forgot-password"><a href="#">Forgot Password?</a></div>
+                            <button type="submit" class="btn">Login as Admin</button>
+                        </form>
+                    </div>
+                    
+                    <div class="toggle-form">
+                       Don't have an account? <a>Sign Up</a>
+                    </div>
+                    <div class="bypass-login">
+                       <a href="#" id="bypass-login-btn">Bypass Login & Continue</a>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div class="close-login-btn">&times;</div>
+                    <div class="header">
+                        <h1>Create Account</h1>
+                        <p>Get started with a new account</p>
+                    </div>
+                     <form id="signup-form">
+                        <div class="name-group">
+                            <div class="input-group">
+                                <input type="text" placeholder=" " required>
+                                <label>First Name</label>
+                            </div>
+                            <div class="input-group">
+                                <input type="text" placeholder=" " required>
+                                <label>Last Name</label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" placeholder=" " required>
+                            <label>Email Address</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" class="password-input" placeholder=" " required>
+                            <label>Password</label>
+                            <span class="password-toggle"><i class="fas fa-eye"></i></span>
+                        </div>
+                        <div class="input-group">
+                            <select id="role-select" required>
+                                <option value="" disabled selected>Select Role</option>
+                                <option value="User">User</option>
+                                <option value="vendor">Vendor</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                             <label>Role</label>
+                        </div>
+                         <div class="input-group">
+                            <input type="tel" id="signup-contact" placeholder=" " required>
+                            <label for="signup-contact">Contact Number</label>
+                        </div>
+                        <div class="input-group address-group">
+                            <textarea id="signup-address" placeholder=" "></textarea>
+                            <label for="signup-address">Address (for Vendors)</label>
+                        </div>
+                        <button type="submit" class="btn">Sign Up</button>
+                    </form>
+                    <div class="toggle-form">
+                       Already have an account? <a>Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Homepage Elements ---
+            const hamburger = document.querySelector('.hamburger');
+            const sideMenu = document.querySelector('.side-menu');
+            const closeMenuBtn = document.querySelector('.side-menu .close-btn');
+            const mainLoginBtn = document.querySelector('.side-menu .login-btn');
+            const mainSignupLink = document.querySelector('.side-menu .signup-link');
+            const heroText = document.querySelector('.hero-text');
+            const navLinks = document.querySelector('.nav-links');
+            
+            // --- Login Modal Elements ---
+            const loginModal = document.getElementById('login-modal');
+            const closeLoginBtn = document.querySelectorAll('.close-login-btn');
+            const bypassLoginBtn = document.getElementById('bypass-login-btn');
+            const loginContainer = document.querySelector('.login-container');
+            const roleTabs = document.querySelectorAll('.tabs button');
+            const roleForms = document.querySelectorAll('.form-content');
+            const passwordToggles = document.querySelectorAll('.password-toggle');
+            const toggleFormLinks = document.querySelectorAll('.toggle-form a');
+
+            // --- Signup Form Elements ---
+            const roleSelect = document.getElementById('role-select');
+            const addressGroup = document.querySelector('.address-group');
+            
+            // --- Auth State Elements ---
+            const loginSignupSection = document.querySelector('.login-signup');
+            const userInfoSection = document.querySelector('.user-info');
+            
+            // --- Homepage Logic ---
+            hamburger.addEventListener('click', () => sideMenu.classList.add('open'));
+            closeMenuBtn.addEventListener('click', () => sideMenu.classList.remove('open'));
+            document.addEventListener('click', (event) => {
+                if (!sideMenu.contains(event.target) && !hamburger.contains(event.target) && sideMenu.classList.contains('open')) {
+                    sideMenu.classList.remove('open');
+                }
+            });
+
+            // --- Modal Logic ---
+            function showLoginModal(showSignup = false) {
+                sideMenu.classList.remove('open');
+                loginModal.classList.add('show');
+                heroText.classList.add('hidden');
+                navLinks.classList.add('hidden');
+                if (showSignup) {
+                    loginContainer.classList.add('flipped');
+                } else {
+                    loginContainer.classList.remove('flipped');
+                }
+            }
+
+            function hideLoginModal() {
+                loginModal.classList.remove('show');
+                heroText.classList.remove('hidden');
+                navLinks.classList.remove('hidden');
+            }
+
+            mainLoginBtn.addEventListener('click', () => showLoginModal(false));
+            mainSignupLink.addEventListener('click', () => showLoginModal(true));
+            
+            closeLoginBtn.forEach(btn => btn.addEventListener('click', hideLoginModal));
+
+            loginModal.addEventListener('click', (event) => {
+                if (event.target === loginModal) {
+                    hideLoginModal();
+                }
+            });
+
+            toggleFormLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    loginContainer.classList.toggle('flipped');
+                });
+            });
+            
+            // --- Login Simulation & Bypass ---
+            function performLogin() {
+                hideLoginModal();
+                loginSignupSection.style.display = 'none';
+                userInfoSection.style.display = 'flex';
+            }
+
+            bypassLoginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                performLogin();
+            });
+
+            const allForms = document.querySelectorAll('#login-modal form');
+            allForms.forEach(form => {
+                if (form) {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const submitBtn = form.querySelector('.btn');
+                        const originalBtnHTML = submitBtn.innerHTML;
+                        submitBtn.innerHTML = '<span class="spinner"></span>';
+                        submitBtn.disabled = true;
+
+                        setTimeout(() => {
+                            submitBtn.innerHTML = originalBtnHTML;
+                            submitBtn.disabled = false;
+                            performLogin();
+                        }, 1500);
+                    });
+                }
+            });
+
+
+            // --- Form Internal Logic ---
+            roleTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    roleTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    roleForms.forEach(f => f.classList.remove('active'));
+                    document.getElementById(`${tab.dataset.role}-form`).classList.add('active');
+                });
+            });
+
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const passwordInput = toggle.parentElement.querySelector('.password-input');
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    toggle.querySelector('i').classList.toggle('fa-eye');
+                    toggle.querySelector('i').classList.toggle('fa-eye-slash');
+                });
+            });
+
+            // --- Conditional Signup Fields ---
+            roleSelect.addEventListener('change', () => {
+                if(roleSelect.value === 'vendor') {
+                    addressGroup.classList.add('show');
+                } else {
+                    addressGroup.classList.remove('show');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const generateBtn = document.getElementById('generate-btn');
+            const mainContent = document.getElementById('main-content');
+            const preferencesContainer = document.getElementById('preferences-container');
+            const itineraryContainer = document.getElementById('itinerary-container');
+            const itineraryPlaceholder = document.getElementById('itinerary-placeholder');
+            const itineraryContent = document.getElementById('itinerary-content');
+
+            // --- Date Picker Logic ---
+            const startDateInput = document.getElementById('start-date');
+            const endDateInput = document.getElementById('end-date');
+            const durationInput = document.getElementById('trip-duration');
+            let tripDays = 0;
+
+            if (startDateInput) { // Check if element exists before initializing
+                const dateOptions = {
+                    altInput: true, altFormat: "F j, Y", dateFormat: "Y-m-d",
+                    onChange: function(selectedDates, dateStr, instance) { updateDuration(); }
+                };
+                const startDatePicker = flatpickr(startDateInput, dateOptions);
+                const endDatePicker = flatpickr(endDateInput, dateOptions);
+                
+                function updateDuration() {
+                    const start = startDatePicker.selectedDates[0];
+                    const end = endDatePicker.selectedDates[0];
+                    if (start && end && end >= start) {
+                        const diffTime = Math.abs(end - start);
+                        tripDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                        durationInput.value = `${tripDays} Day(s) / ${tripDays - 1} Night(s)`;
+                    } else {
+                        tripDays = 0;
+                        durationInput.value = '';
+                    }
+                }
+            }
+            
+            // --- Custom Interests Dropdown Logic ---
+            const interestSelector = document.getElementById('interest-selector');
+            if (interestSelector) { // Check if element exists
+                const interestMenu = document.getElementById('interest-menu');
+                const interestCheckboxes = interestMenu.querySelectorAll('input[type="checkbox"]');
+                
+                interestSelector.addEventListener('click', () => {
+                    interestMenu.style.display = interestMenu.style.display === 'block' ? 'none' : 'block';
+                });
+                
+                function updateSelectedInterests() {
+                    const selected = Array.from(interestCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+                    interestSelector.innerHTML = '';
+                    if (selected.length === 0) {
+                        interestSelector.innerHTML = '<span class="text-gray-400">Select your interests...</span>';
+                    } else {
+                        selected.forEach(interest => {
+                            const tag = document.createElement('span');
+                            tag.className = 'tag';
+                            tag.textContent = interest;
+                            interestSelector.appendChild(tag);
+                        });
+                    }
+                }
+                interestCheckboxes.forEach(cb => cb.addEventListener('change', updateSelectedInterests));
+                document.addEventListener('click', (e) => {
+                    if (!interestSelector.parentElement.contains(e.target)) {
+                        interestMenu.style.display = 'none';
+                    }
+                });
+            }
+
+            // --- Itinerary Generation Logic ---
+            function generateItineraryHTML(days) {
+                const highlights = ["Sunrise at Netarhat Hill Station", "Tribal village homestay experience", "Wildlife safari at Betla National Park", "Rock climbing at Patratu Valley", "Temple visit at Deoghar"];
+                let highlightsHTML = highlights.slice(0, days > 2 ? 5 : 3).map(h => `
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-yellow-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        ${h}
+                    </li>`).join('');
+
+                let dailyItineraryHTML = '';
+                for (let i = 1; i <= days; i++) {
+                    dailyItineraryHTML += `
+                        <div class="itinerary-day border border-gray-200 rounded-xl p-4" style="animation-delay: ${i * 0.15}s;">
+                            <div class="flex items-center">
+                                <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4">${i}</div>
+                                <h3 class="text-xl font-bold text-gray-800">Day ${i}: ${i === 1 ? 'Arrival & Exploration' : (i === days ? 'Culture & Departure' : 'Adventure Awaits')}</h3>
+                            </div>
+                            <div class="pl-12 mt-2 text-sm space-y-2">
+                                <p><strong>Activities:</strong> Sample activity 1, Sample activity 2</p>
+                                <p><strong>Stay:</strong> Recommended Hotel Name</p>
+                                <p><strong>Meals:</strong> Breakfast, Dinner included</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="space-y-6">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-900">Personalized Jharkhand Adventure</h2>
+                            <div class="flex items-center justify-between mt-1">
+                               <p class="text-gray-500">${days} Days, ${days - 1} Nights</p>
+                               <p class="text-2xl font-bold text-green-600">₹${(days * 5000 + 3500).toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Trip Highlights</h3>
+                            <ul class="space-y-1">${highlightsHTML}</ul>
+                        </div>
+                        <div>
+                           <h3 class="text-xl font-bold text-gray-800 mb-3">Daily Itinerary</h3>
+                           <div class="space-y-4">${dailyItineraryHTML}</div>
+                        </div>
+                        <button class="w-full mt-4 bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-transform transform hover:scale-105">
+                           Book This Itinerary
+                        </button>
+                    </div>
+                `;
+            }
+            if(generateBtn){
+                generateBtn.addEventListener('click', () => {
+                    if (tripDays <= 0) {
+                        alert("Please select a valid date range.");
+                        return;
+                    }
+                    mainContent.classList.remove('grid-cols-1');
+                    mainContent.classList.add('lg:grid-cols-2');
+                    preferencesContainer.classList.remove('max-w-4xl', 'mx-auto');
+                    itineraryContainer.classList.remove('hidden');
+                    itineraryPlaceholder.classList.remove('hidden');
+                    itineraryPlaceholder.innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                            <p class="mt-4 text-gray-600 font-semibold">Crafting your perfect trip...</p>
+                        </div>
+                    `;
+                    itineraryContent.classList.add('hidden');
+                    setTimeout(() => {
+                        itineraryPlaceholder.classList.add('hidden');
+                        itineraryContent.innerHTML = generateItineraryHTML(tripDays);
+                        itineraryContent.classList.remove('hidden');
+                        document.querySelectorAll('.itinerary-day').forEach(el => el.classList.add('animate-fadeInUp'));
+                    }, 2000); 
+                });
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!document.getElementById('map')) return; // Exit if map element doesn't exist
+
+            const divisionData = {
+                'palamu-division': {
+                    title: 'Palamu',
+                    description: 'Known as the gateway to Chotanagpur, Palamu is a land of dense forests, ancient forts, and thriving wildlife. It is home to the famous Betla National Park and the Palamu Tiger Reserve.',
+                    places: [
+                        { img: 'https://latehartourism.com/wp-content/uploads/2018/10/maim-59.jpg', caption: 'Betla National Park', coords: [23.88, 84.19] },
+                        { img: 'https://d3sftlgbtusmnv.cloudfront.net/blog/wp-content/uploads/2024/09/Palamu-Fort-Cover-Photo-840x425.jpg', caption: 'Palamu Fort', coords: [23.97, 84.23] },
+                        { img: 'https://s7ap1.scene7.com/is/image/incredibleindia/lodh-waterfalls-ranchi-jharkhand-1-attr-hero?qlt=82&ts=1727010942220', caption: 'Lodh Falls', coords: [23.63, 84.24] }
+                    ]
+                },
+                'north-chotanagpur-division': {
+                    title: 'North Chotanagpur',
+                    description: 'The most populous division, a hub of industries and mineral wealth. It holds deep spiritual significance with landmarks like Parasnath Hills, the highest peak in the state and a major Jain pilgrimage site.',
+                    places: [
+                        { img: 'https://travelsetu.com/apps/uploads/new_destinations_photos/destination/2024/01/08/9b09e4f561e8dd2954b42774ecb0bae8_1000x1000.jpg', caption: 'Parasnath Hills', coords: [24.17, 86.12] },
+                        { img: 'https://www.mappls.com/place/5TE7SA_1695386009677_1.png', caption: 'Konar Dam', coords: [23.95, 85.76] },
+                        { img: 'https://travelsetu.com/apps/uploads/new_destinations_photos/destination/2024/01/08/f4c9b45efb189acc78e27fa743cbd813_1000x1000.jpg', caption: 'Hazaribagh Lake', coords: [24.00, 85.36] }
+                    ]
+                },
+                'south-chotanagpur-division': {
+                    title: 'South Chotanagpur',
+                    description: 'The heart of Jharkhand, this division includes the capital city, Ranchi. It is famously called the "City of Waterfalls," boasting spectacular natural wonders like Hundru, Jonha, and Dassam falls.',
+                    places: [
+                        { img: 'https://thumbs.dreamstime.com/b/hudru-waterfall-jharkhand-hundru-falls-waterfall-located-ranchi-district-indian-state-jharkhand-122775833.jpg', caption: 'Hundru Falls', coords: [23.45, 85.65] },
+                        { img: 'https://scontent.fbho4-4.fna.fbcdn.net/v/t1.6435-9/179556421_1142220682866978_5600512962822181990_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=3a1ebe&_nc_ohc=5DoAL3Ki8JcQ7kNvwHm2UOp&_nc_oc=Adm8m82p9VZSe4WNPSTzkdkm1921rcA_dmsefEZvXVUO6cKf1pWm5TDhr-uvBAq9by-sjhNOl3izjftaTMje4R-1&_nc_zt=23&_nc_ht=scontent.fbho4-4.fna&_nc_gid=Ff2daibyXHqZ29NowLk-eA&oh=00_AfYj2kMnSdOc6QUKDsV4wrTor7E1TfJ-fYXWxKAYtMY96g&oe=68F28709', caption: 'Patratu Valley', coords: [23.67, 85.30] },
+                        { img: 'https://media-cdn.tripadvisor.com/media/photo-s/04/56/6e/a7/jagannath-temple.jpg', caption: 'Jagannath Temple', coords: [23.31, 85.27] }
+                    ]
+                },
+                'kolhan-division': {
+                    title: 'Kolhan',
+                    description: 'Situated in southern Jharkhand, Kolhan is rich in tribal culture and dense Saranda forests. It is an industrial powerhouse with cities like Jamshedpur, known as the "Steel City of India."',
+                    places: [
+                        { img: 'https://thumbs.dreamstime.com/b/jubilee-park-covers-large-area-acres-located-middle-city-was-gifted-tata-steel-company-76031726.jpg', caption: 'Jubilee Park', coords: [22.81, 86.18] },
+                        { img: 'https://assets.telegraphindia.com/telegraph/2021/Jun/1622883398_jha7.jpg', caption: 'Dalma Wildlife Sanctuary', coords: [22.90, 86.22] },
+                        { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Jharkhand_Hirni_fall.jpg/1200px-Jharkhand_Hirni_fall.jpg', caption: 'Hirni Falls', coords: [22.78, 85.12] }
+                    ]
+                },
+                'santhal-pargana-division': {
+                    title: 'Santhal Pargana',
+                    description: 'This division is a land of ancient temples and vibrant Santhali culture. It is a major Hindu pilgrimage destination, home to the famous Baidyanath Jyotirlinga temple in Deoghar.',
+                    places: [
+                        { img: 'https://thumbs.dreamstime.com/b/baidyanath-temple-deoggar-god-shib-thakurs-other-god-godes-temple-baidyanath-temple-deoghar-india-322565426.jpg ', caption: 'Baidyanath Temple', coords: [24.49, 86.69] },
+                        { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Trikut_Hills.jpg/1920px-Trikut_Hills.jpg', caption: 'Trikut Pahar', coords: [24.40, 86.84] },
+                        { img: 'https://cdn.tripuntold.com/media/photos/location/2018/11/16/b5085819-68bb-41fe-b515-7dc40349b6c7.jpg', caption: 'Massanjore Dam', coords: [24.08, 87.32] }
+                    ]
+                }
+            };
+            const jharkhandDivisionsGeoJSON = { "type": "FeatureCollection", "features": [ { "type": "Feature", "properties": { "division": "palamu-division" }, "geometry": { "type": "Polygon", "coordinates": [ [ [84, 24.5], [83.5, 24], [84.3, 23.5], [85, 24.2], [84.5, 24.8], [84, 24.5] ] ] } }, { "type": "Feature", "properties": { "division": "north-chotanagpur-division" }, "geometry": { "type": "Polygon", "coordinates": [ [ [85, 24.2], [85.5, 24.7], [86.5, 24.5], [86.3, 23.8], [85.3, 23.5], [85, 24.2] ] ] } }, { "type": "Feature", "properties": { "division": "santhal-pargana-division" }, "geometry": { "type": "Polygon", "coordinates": [ [ [86.5, 24.5], [87.8, 25.2], [87.5, 24], [86.5, 23.9], [86.5, 24.5] ] ] } }, { "type": "Feature", "properties": { "division": "kolhan-division" }, "geometry": { "type": "Polygon", "coordinates": [ [ [85.0, 23.1], [86.6, 23.1], [86.5, 22.0], [85.0, 22.4], [85.0, 23.1] ] ] } }, { "type": "Feature", "properties": { "division": "south-chotanagpur-division" }, "geometry": { "type": "Polygon", "coordinates": [ [ [84.3, 23.8], [85.8, 23.8], [85.8, 22.8], [85.0, 22.5], [84.0, 22.8], [84.3, 23.8] ] ] } } ] };
+
+            const map = L.map('map', { zoomAnimation: true, fadeAnimation: true }).setView([23.6, 85.3], 7.5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            const defaultStyle = { fillColor: '#E0E0E0', weight: 1.5, opacity: 1, color: '#FFFFFF', fillOpacity: 0.6 };
+            const highlightStyle = { fillColor: '#ff9933', weight: 2, color: '#e68a2e', fillOpacity: 0.5 };
+            
+            let divisionLayers = {};
+            let markerGroup = L.layerGroup().addTo(map);
+
+            L.geoJSON(jharkhandDivisionsGeoJSON, {
+                style: defaultStyle,
+                onEachFeature: (feature, layer) => {
+                    const divisionKey = feature.properties.division;
+                    divisionLayers[divisionKey] = layer;
+                    const divisionTitle = divisionData[divisionKey].title;
+                    layer.bindTooltip(divisionTitle, { permanent: true, direction: 'center', className: 'division-label' }).openTooltip();
+                    layer.on('click', (e) => {
+                        updateContent(divisionKey);
+                        map.fitBounds(e.target.getBounds());
+                    });
+                }
+            }).addTo(map);
+
+            const buttons = document.querySelectorAll('.region-selector button');
+            const contentWrapper = document.querySelector('.places-to-go-section .content-wrapper');
+            const divisionNameEl = document.getElementById('division-name');
+            const divisionDescriptionEl = document.getElementById('division-description');
+            const imageElements = [ { img: document.getElementById('image1'), cap: document.getElementById('caption1') }, { img: document.getElementById('image2'), cap: document.getElementById('caption2') }, { img: document.getElementById('image3'), cap: document.getElementById('caption3') } ];
+            const cardElements = document.querySelectorAll('.places-to-go-section .image-gallery .card');
+
+            function updateContent(divisionKey) {
+                const data = divisionData[divisionKey];
+                if (!data) return;
+                
+                markerGroup.clearLayers(); 
+                data.places.forEach((place, index) => {
+                    L.circle(place.coords, {
+                        radius: 8000, 
+                        color: '#e68a2e',
+                        weight: 1,
+                        fillColor: '#ff9933',
+                        fillOpacity: 0.2
+                    }).addTo(markerGroup);
+
+                    const iconHtml = `<div class="location-pin-wrapper"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M12 0C7.31 0 3.5 3.81 3.5 8.5c0 5.25 8.5 15.5 8.5 15.5s8.5-10.25 8.5-15.5C20.5 3.81 16.69 0 12 0zm0 11.5c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z'/%3E%3C/svg%3E" class="location-pin-icon"></div>`;
+                    const customIcon = L.divIcon({
+                        html: iconHtml,
+                        className: '',
+                        iconSize: [32, 40],
+                        iconAnchor: [16, 40],
+                        popupAnchor: [0, -40]
+                    });
+                    
+                    const marker = L.marker(place.coords, { icon: customIcon })
+                     .bindTooltip(place.caption, {offset: [0, -28], direction: 'top'})
+                     .addTo(markerGroup);
+
+                    marker.on('click', () => {
+                        const cardToHighlight = cardElements[index];
+                        if (cardToHighlight) {
+                            cardElements.forEach(c => c.classList.remove('highlight-animation'));
+                            setTimeout(() => { cardToHighlight.classList.add('highlight-animation'); }, 10);
+                            cardToHighlight.addEventListener('animationend', () => { cardToHighlight.classList.remove('highlight-animation'); }, { once: true });
+                        }
+                        const pinElement = marker._icon.querySelector('.location-pin-icon');
+                        if (pinElement) {
+                            pinElement.classList.add('pin-animation');
+                            pinElement.addEventListener('animationend', () => { pinElement.classList.remove('pin-animation'); }, { once: true });
+                        }
+                    });
+                });
+
+                contentWrapper.classList.add('fade-out');
+                setTimeout(() => {
+                    divisionNameEl.textContent = data.title;
+                    divisionDescriptionEl.textContent = data.description;
+                    data.places.forEach((place, index) => {
+                        if(imageElements[index]){
+                            imageElements[index].img.src = place.img;
+                            imageElements[index].img.alt = place.caption;
+                            imageElements[index].cap.textContent = place.caption;
+                        }
+                    });
+                    contentWrapper.classList.remove('fade-out');
+                }, 400);
+
+                for (const key in divisionLayers) {
+                    divisionLayers[key].setStyle(defaultStyle);
+                }
+                if (divisionLayers[divisionKey]) {
+                    divisionLayers[divisionKey].setStyle(highlightStyle);
+                    divisionLayers[divisionKey].bringToFront();
+                }
+                
+                buttons.forEach(b => b.classList.remove('active'));
+                document.querySelector(`.places-to-go-section button[data-region="${divisionKey}"]`).classList.add('active');
+            }
+
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const divisionKey = button.dataset.region;
+                    updateContent(divisionKey);
+                    
+                    if(divisionLayers[divisionKey]) {
+                        map.fitBounds(divisionLayers[divisionKey].getBounds(), {padding: [50, 50]});
+                    }
+                });
+            });
+
+            updateContent('palamu-division');
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // === LOGIC FOR STORIES.HTML ===
+            if (document.getElementById('slider-card')) {
+                // --- DATA ---
+                const testimonials = [
+                    { name: "Ananya Reddy", location: "Bengaluru, Karnataka", date: "September 2025", rating: 5, tripType: "Weekend Getaway", destination: "Netarhat Hill Station", review: "The user experience of this platform is as beautiful as Jharkhand itself! From booking to the actual trip, everything was seamless. The AI recommendations were incredibly accurate – it suggested the perfect balance of adventure and relaxation for my weekend getaway. I bought authentic Dokra art directly from artisans and learned about their techniques. This is sustainable tourism done right!", tags: ["UI/UX Excellence", "AI Accuracy", "Handicraft Shopping", "Sustainable Tourism"], images: [ "https://i.pinimg.com/1200x/11/24/f8/1124f8adaa1aef8b20dc41ddaf64e82d.jpg", "https://i.pinimg.com/1200x/d8/5c/1b/d85c1b3262d70604b5adf4c03ed4666d.jpg" ] },
+                    { name: "Rajiv Malhotra", location: "Mumbai, Maharashtra", date: "August 2025", rating: 4, tripType: "Adventure Trip", destination: "Patratu & Betla", review: "An absolutely thrilling adventure. The drive through Patratu Valley was breathtaking, and the wildlife safari in Betla National Park was an experience I'll never forget. The platform helped plan all the logistics flawlessly. Highly recommended for adventure seekers!", tags: ["Adventure", "Road Trip", "Wildlife", "Seamless Planning"], images: [ "https://i.pinimg.com/1200x/a0/e9/98/a0e9989c49ca7b15910d9816f4d342a9.jpg", "https://i.pinimg.com/1200x/c3/9f/5d/c39f5d2c3258978fe21c9fd932bd6bd0.jpg" ] },
+                    { name: "Priya Sharma", location: "Delhi, NCR", date: "July 2025", rating: 5, tripType: "Spiritual Journey", destination: "Deoghar", review: "My spiritual trip to Deoghar was serene and deeply moving. The AI itinerary included not just the main Baidyanath temple but also smaller, peaceful ashrams nearby that I wouldn't have found otherwise. It was a truly blessed and well-organized pilgrimage.", tags: ["Pilgrimage", "Spiritual", "Cultural Insight", "AI Recommendations"], images: [ "https://thumbs.dreamstime.com/b/baidyanath-temple-deoggar-god-shib-thakurs-other-god-godes-temple-baidyanath-temple-deoghar-india-322565426.jpg ", "https://i.pinimg.com/1200x/70/0c/63/700c63c2ad1d616f12c3a73ea2566df6.jpg" ] }
+                ];
+
+                // --- SLIDER LOGIC ---
+                let currentTestimonial = 0;
+                const container = document.getElementById('testimonial-content-container');
+                const dotsContainer = document.getElementById('slider-dots');
+                const sliderCard = document.getElementById('slider-card');
+
+                function renderTestimonial(index) {
+                    const t = testimonials[index];
+                    container.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                            <div>
+                                <div class="flex items-center mb-4">
+                                    <img src="https://i.pravatar.cc/60?u=${t.name.replace(/\s/g, '')}" alt="${t.name}" class="w-14 h-14 rounded-full mr-4">
+                                    <div><h3 class="font-bold text-lg text-gray-800">${t.name}</h3><p class="text-sm text-gray-500">${t.location}</p></div>
+                                </div>
+                                <div class="flex items-center justify-between text-sm text-gray-500 border-b pb-4 mb-4">
+                                    <span>${'⭐'.repeat(t.rating) + '✩'.repeat(5 - t.rating)}</span>
+                                    <span>${t.date}</span>
+                                </div>
+                                <div class="flex space-x-8 mb-6">
+                                    <div><p class="text-xs text-gray-400 font-semibold uppercase">Trip Type</p><p class="font-medium text-gray-700">${t.tripType}</p></div>
+                                    <div><p class="text-xs text-gray-400 font-semibold uppercase">Destination</p><p class="font-medium text-gray-700">${t.destination}</p></div>
+                                </div>
+                                <p class="text-gray-600 leading-relaxed mb-6">${t.review}</p>
+                                <div class="flex flex-wrap gap-2">${t.tags.map(tag => `<span class="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">${tag}</span>`).join('')}</div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 h-64">${t.images.map(img => `<div class="overflow-hidden rounded-lg shadow-md"><img src="${img}" class="testimonial-image w-full h-full object-cover"></div>`).join('')}</div>
+                        </div>`;
+                    dotsContainer.innerHTML = testimonials.map((_, i) => `<button data-index="${i}" class="w-2.5 h-2.5 rounded-full ${i === index ? 'bg-gray-800' : 'bg-gray-300'} transition-colors"></button>`).join('');
+                }
+                function switchTestimonial(index) {
+                    container.classList.add('fade-out');
+                    setTimeout(() => {
+                        currentTestimonial = index; renderTestimonial(currentTestimonial); container.classList.remove('fade-out');
+                    }, 300);
+                }
+                dotsContainer.addEventListener('click', e => { if(e.target.dataset.index) switchTestimonial(parseInt(e.target.dataset.index)) });
+                const next = () => switchTestimonial((currentTestimonial + 1) % testimonials.length);
+                const prev = () => switchTestimonial((currentTestimonial - 1 + testimonials.length) % testimonials.length);
+                document.getElementById('next-btn').addEventListener('click', next);
+                document.getElementById('prev-btn').addEventListener('click', prev);
+                document.addEventListener('keydown', e => { if(e.key === 'ArrowRight') next(); if(e.key === 'ArrowLeft') prev(); });
+                
+                // Mouse Drag Interactivity
+                let isDown = false, startX, walk;
+                sliderCard.addEventListener('mousedown', e => { isDown = true; sliderCard.classList.add('dragging'); startX = e.pageX; });
+                sliderCard.addEventListener('mouseleave', () => { isDown = false; sliderCard.classList.remove('dragging'); });
+                sliderCard.addEventListener('mouseup', () => { isDown = false; sliderCard.classList.remove('dragging'); if(Math.abs(walk) > 100) { if (walk < 0) next(); else prev(); } });
+                sliderCard.addEventListener('mousemove', e => { if(!isDown) return; e.preventDefault(); walk = e.pageX - startX; });
+                
+                // Initial render
+                renderTestimonial(0);
+            }
+
+            // === LOGIC FOR FAQ.HTML ===
+            if (document.getElementById('faq-container')) {
+                const faqData = [
+                    {
+                        category: 'trip-planning',
+                        question: 'How does the AI-powered itinerary planning work?',
+                        answer: `
+                            <p class="mb-4">Our AI analyzes multiple factors to create your perfect trip:</p>
+                            <ol class="list-decimal list-inside space-y-2 mb-6">
+                                <li><strong>Personal Preferences:</strong> Adventure level, interests, budget.</li>
+                                <li><strong>Real-time Data:</strong> Weather, local events, crowd levels.</li>
+                                <li><strong>Historical Patterns:</strong> What similar travelers enjoyed.</li>
+                                <li><strong>Local Insights:</strong> Guide recommendations and hidden gems.</li>
+                            </ol>
+                            <p>The system continuously learns and improves recommendations. You can modify suggestions anytime, and our AI adapts accordingly.</p>
+                        `,
+                        expert: { name: 'Rahul Tech', title: 'AI Systems Expert' },
+                        tags: ['#AI', '#itinerary', '#planning', '#technology']
+                    },
+                    {
+                        category: 'trip-planning',
+                        question: "What's the best time to visit Jharkhand?",
+                        answer: '<p>The best time to visit Jharkhand is during the winter months, from <strong>October to March</strong>. The weather is pleasant and cool, ideal for sightseeing, trekking, and exploring national parks. Monsoons (July to September) bring lush greenery but can disrupt travel, while summers (April to June) can be very hot.</p>',
+                        expert: { name: 'Sunita Kumari', title: 'Local Guide' },
+                        tags: ['#weather', '#best-time', '#planning']
+                    },
+                    {
+                        category: 'safety',
+                        question: 'Is it safe to travel to Jharkhand, especially in remote areas?',
+                        answer: '<p>Jharkhand is generally safe for tourists. Major tourist destinations like Ranchi, Jamshedpur, Netarhat, and Deoghar are well-policed and welcome travelers. However, like any travel, it\'s wise to be cautious. For remote or forested areas, it is highly recommended to travel during the day and hire a local guide who is familiar with the region.</p>',
+                        expert: { name: 'Amit Singh', title: 'Travel Safety Advisor' },
+                        tags: ['#safety', '#travel-tips', '#remote-areas']
+                    },
+                    {
+                        category: 'accommodation',
+                        question: 'What are the accommodation options like in Jharkhand?',
+                        answer: '<p>Jharkhand offers a range of accommodations. Major cities have everything from luxury hotels to budget-friendly guesthouses. In tourist spots like Netarhat, you will find government-run tourist lodges and private resorts. For a unique experience, consider a village homestay to immerse yourself in the local culture.</p>',
+                        expert: { name: 'Priya Agarwal', title: 'Hospitality Manager' },
+                        tags: ['#hotels', '#homestay', '#accommodation']
+                    },
+                    {
+                        category: 'activities',
+                        question: 'What are some must-try local experiences or cuisines?',
+                        answer: '<p>You must experience the vibrant tribal culture through local festivals and dance forms like Chhau. Visit a Sohrai painting village to see the traditional art form. For food, try local delicacies like <strong>Dhuska</strong> (a fried rice pancake), <strong>Litti Chokha</strong>, and <strong>Thekua</strong> (a sweet snack). Don\'t miss the refreshing taste of Handia, a local rice brew.</p>',
+                        expert: { name: 'Ramesh Mahto', title: 'Cultural Expert' },
+                        tags: ['#culture', '#food', '#activities', '#art']
+                    },
+                    {
+                        category: 'transport',
+                        question: 'How do I get around Jharkhand?',
+                        answer: '<p>Jharkhand has a decent road network connecting major cities. You can hire private taxis or use app-based services in cities like Ranchi and Jamshedpur. For inter-city travel, buses and trains are common. The state has an airport in Ranchi (Birsa Munda Airport) with connections to major Indian cities.</p>',
+                        expert: { name: 'Sanjay Yadav', title: 'Transport Coordinator' },
+                        tags: ['#transport', '#travel', '#getting-around']
+                    }
+                ];
+
+                const faqContainer = document.getElementById('faq-container');
+                const faqTabs = document.getElementById('faq-tabs');
+                
+                function renderFAQs(category = 'all') {
+                    faqContainer.innerHTML = '';
+                    const filteredData = category === 'all' ? faqData : faqData.filter(item => item.category === category);
+                    
+                    if(filteredData.length === 0) {
+                        faqContainer.innerHTML = `<p class="text-center text-gray-500">No questions found for this category.</p>`;
+                        return;
+                    }
+
+                    filteredData.forEach(item => {
+                        const faqItem = document.createElement('div');
+                        faqItem.className = 'faq-item border border-gray-200 rounded-lg bg-white';
+                        faqItem.innerHTML = `
+                            <button class="faq-question w-full flex justify-between items-center text-left p-5">
+                                <h3 class="font-semibold text-gray-800">${item.question}</h3>
+                                <svg class="chevron w-5 h-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="faq-answer px-5">
+                                <div class="pb-5 border-t border-gray-200 pt-4">
+                                    <div class="text-gray-600 leading-relaxed">${item.answer}</div>
+                                    <div class="bg-gray-50 p-4 rounded-lg mt-6 flex justify-between items-center">
+                                        <div class="flex items-center">
+                                            <img src="https://i.pravatar.cc/40?u=${item.expert.name.replace(/\s/g, '')}" class="w-10 h-10 rounded-full mr-3" alt="${item.expert.name}">
+                                            <div>
+                                                <p class="font-semibold text-sm text-gray-800">${item.expert.name}</p>
+                                                <p class="text-xs text-gray-500">${item.expert.title}</p>
+                                            </div>
+                                        </div>
+                                        <button class="text-sm font-semibold text-blue-600 hover:text-blue-800 hidden md:block">▶ Watch Video</button>
+                                    </div>
+                                    <div class="mt-4 flex flex-wrap gap-2 items-center justify-between text-sm">
+                                        <div class="flex flex-wrap gap-2">
+                                            ${item.tags.map(tag => `<span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2 py-1 rounded">${tag}</span>`).join('')}
+                                        </div>
+                                        <div class="flex items-center space-x-4 text-gray-500">
+                                            <button class="hover:text-green-600 flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 14.95a1 1 0 001.414 1.414l.707-.707a1 1 0 00-1.414-1.414l-.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1a1 1 0 112 0v1a1 1 0 11-2 0zM12 16v-1a1 1 0 112 0v1a1 1 0 11-2 0z"></path></path><path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0l-4-4a2 2 0 112.828-2.828L8 5.172l.586-.586z"></path></svg>
+                                                Helpful
+                                            </button>
+                                            <button class="hover:text-blue-600 flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path></svg>
+                                                Share
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        faqContainer.appendChild(faqItem);
+                    });
+                }
+
+                faqContainer.addEventListener('click', (e) => {
+                    const questionButton = e.target.closest('.faq-question');
+                    if (questionButton) {
+                        const faqItem = questionButton.parentElement;
+                        
+                        faqContainer.querySelectorAll('.faq-item').forEach(item => {
+                            if (item !== faqItem && item.classList.contains('open')) {
+                                item.classList.remove('open');
+                            }
+                        });
+                        
+                        faqItem.classList.toggle('open');
+                    }
+                });
+
+                faqTabs.addEventListener('click', (e) => {
+                    const tabButton = e.target.closest('.tab-btn');
+                    if (tabButton) {
+                        const category = tabButton.dataset.category;
+                        
+                        faqTabs.querySelectorAll('.tab-btn').forEach(btn => {
+                            btn.classList.remove('bg-orange-500', 'text-white', 'shadow');
+                            btn.classList.add('bg-white', 'text-gray-600');
+                        });
+                        
+                        tabButton.classList.add('bg-orange-500', 'text-white', 'shadow');
+                        tabButton.classList.remove('bg-white', 'text-gray-600');
+                        
+                        renderFAQs(category);
+                    }
+                });
+
+                // Initial render
+                renderFAQs('trip-planning');
+            }
+            
+            // --- COMMON ANIMATION ON SCROLL ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                         observer.unobserve(entry.target); 
+                    }
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        });
+    </script>
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="chat_bot"
+  agent-id="9ae149c9-6a6e-49a4-808b-54d9c73d2a00"
+  language-code="en"
+></df-messenger>
+</body>
+</html>
