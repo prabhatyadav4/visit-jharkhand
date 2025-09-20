@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jharkhand Tourism - An Immersive VR Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+            overflow: hidden; /* Prevent scrollbars from the main layout */
+        }
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        .main-container {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+        .content-panel {
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s ease-in-out;
+        }
+        .carousel-wrapper {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .scene {
+            width: 500px;
+            height: 290px;
+            position: relative;
+            perspective: 1200px;
+            margin-bottom: 2rem;
+        }
+        .carousel {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .carousel-card {
+            position: absolute;
+            width: 480px;
+            height: 270px;
+            left: 10px;
+            top: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.5s, box-shadow 0.5s;
+            background-size: cover;
+            background-position: center;
+        }
+        .carousel-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 20%, rgba(0,0,0,0.1) 100%);
+            transition: background 0.4s ease;
+        }
+        .carousel-card:hover .card-overlay {
+             background: linear-gradient(to top, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.2) 100%);
+        }
+        .card-content {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            z-index: 2;
+            color: white;
+        }
+        .card-vr-button {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+        }
+        .carousel-card:hover .card-vr-button {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .carousel-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .nav-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-button:hover {
+            background: rgba(0,0,0,0.6);
+        }
+        .modal {
+            display: flex;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+            background-color: rgba(0, 0, 0, 0.95);
+        }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.4s ease;
+        }
+        .content-overlay {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+         .content-overlay.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="text-gray-200 antialiased">
+
+    <div class="absolute top-8 left-8 lg:left-32 z-10">
+        <h2 class="font-playfair text-4xl font-bold text-white tracking-wide">Virtual Jharkhand</h2>
+        <p class="text-gray-300 mt-1">An Immersive 360° Journey</p>
+    </div>
+
+    <div class="main-container">
+        <!-- Background and Content Panel -->
+        <div id="content-panel" class="content-panel absolute inset-0 flex items-center justify-center lg:justify-start p-8 lg:pl-32 transition-all duration-500 ease-in-out" style="background-image: linear-gradient(to right, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.4)), url('https://images.unsplash.com/photo-1627895439304-498925515322?q=80&w=2070&auto=format&fit=crop');">
+            <div id="content-overlay" class="content-overlay text-center lg:text-left text-white max-w-2xl">
+                <h1 id="location-title" class="font-playfair text-5xl md:text-7xl font-bold"></h1>
+                <p id="location-description" class="mt-4 text-lg max-w-xl mx-auto lg:mx-0"></p>
+                <button id="vr-button" class="mt-8 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 inline-flex items-center text-xl">
+                    <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Experience VR
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Rotating Carousel Panel -->
+        <div class="carousel-wrapper absolute top-0 right-0 h-full w-full lg:w-2/5">
+            <div class="scene">
+                <div id="carousel" class="carousel">
+                    <!-- Cards injected by JS -->
+                </div>
+            </div>
+            <div class="carousel-navigation">
+                <button id="prev-button" class="nav-button">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button id="next-button" class="nav-button">
+                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Fullscreen Video -->
+    <div id="vrModal" class="modal fixed inset-0 items-center justify-center z-50">
+        <div class="w-full h-full bg-black relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2 transition hover:bg-opacity-75 z-10">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="modalVideoContainer" class="w-full h-full">
+                <!-- Iframe will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const locations = [
+            { id: 'pjOHHazNBss', title: 'Kiriburu', description: "Known as the 'eternal mine', Kiriburu is a breathtaking hill station enveloped in the dense Saranda forest. During monsoons, it transforms into a magical landscape of clouds and mist, offering unparalleled tranquility.", image: 'https://pandareviewz.com/wp-content/uploads/2018/12/Kiriburu-Saranda-Forest.jpg' },
+            { id: 'kzgw0qjQRgw', title: 'Parasnath', description: "The highest peak in Jharkhand, Parasnath Hill is a revered pilgrimage site for Jains. The challenging trek to the summit is rewarded with spiritual solace and spectacular panoramic vistas of the surrounding landscape.", image: 'https://travelsetu.com/apps/uploads/new_destinations_photos/destination/2024/01/08/9b09e4f561e8dd2954b42774ecb0bae8_1000x1000.jpg' },
+
+            { id: '6NJJMH2k9LE', title: 'Getalsud Dam', description: "An engineering marvel on the Subarnarekha River, Getalsud Dam creates a massive, serene reservoir. It's a perfect spot for picnics, boating, and simply unwinding amidst the gentle ripples and lush green surroundings.", image: 'https://scontent.fbho3-1.fna.fbcdn.net/v/t1.6435-9/199437290_338252144345563_3656786001386196106_n.jpg?stp=dst-jpg_p235x350_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=4633_hlyNUAQ7kNvwHrAJH1&_nc_oc=AdnpHe8FVUglLguUkoZ4ORTD_ohZHnRSnJzHWBCJn1wGKB3MqeXus7CUBBbhLnoGPawYr6o368sbBuqcrZRE9oAw&_nc_zt=23&_nc_ht=scontent.fbho3-1.fna&_nc_gid=gAxPXkt0ezMj2-11p9IZDg&oh=00_AfYyJtwmq8Mg3VPJo3LfsI81giq4JLtWBLaSEp3Y7deK9Q&oe=68F5DA06' },
+
+            { id: 'aAYUoBpaXT0', title: 'Netarhat', description: "Affectionately called the 'Queen of Chotanagpur', Netarhat is a pristine hill station famous for its glorious sunrises and sunsets. Its cool climate and dense forests make it an idyllic retreat for nature lovers.", image: 'https://travelsetu.com/apps/uploads/new_destinations_photos/destination/2024/01/08/9ffc869f0419cc62a4e18896dc9b388b_1000x1000.jpg' },
+
+            { id: '81LD2PJrBmc', title: 'Chandil Dam', description: "A picturesque destination against a backdrop of rolling hills, Chandil Dam is a vast expanse of calm water. It's a popular hub for water sports, offering a refreshing escape and a chance to connect with nature.", image: 'https://scontent.fbho3-4.fna.fbcdn.net/v/t1.6435-9/117640614_3284071411686057_2597581667499983338_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_ohc=7C3W8CiyYeoQ7kNvwH-LGZ-&_nc_oc=AdkJJ_xEyJ0U5T4YJy71BO4G-o5gKxQsxL3t2i275rD9PxVM9v76RSa09H7OzLpitug9IrIww9_fMlUkUoz5mP5U&_nc_zt=23&_nc_ht=scontent.fbho3-4.fna&_nc_gid=bq-7AQ4RA86AwQugR1Obtw&oh=00_AfZsEBglj40947I2cXm7fpyVjBtGJSBTE36s0gAWuCdpCQ&oe=68F5F4C3' }
+        ];
+
+        const carousel = document.getElementById('carousel');
+        const contentPanel = document.getElementById('content-panel');
+        const contentOverlay = document.getElementById('content-overlay');
+        const locationTitle = document.getElementById('location-title');
+        const locationDescription = document.getElementById('location-description');
+        const vrButton = document.getElementById('vr-button');
+        const vrModal = document.getElementById('vrModal');
+        const modalVideoContainer = document.getElementById('modalVideoContainer');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const carouselWrapper = document.querySelector('.carousel-wrapper');
+
+        let selectedIndex = 0;
+        const cellCount = locations.length;
+        const theta = 360 / cellCount;
+        let radius;
+        let autoRotateInterval;
+
+        function updateMainContent(location) {
+            if (vrButton.onclick && vrButton.onclick.toString().includes(location.id)) return;
+            contentOverlay.classList.remove('active');
+            
+            setTimeout(() => {
+                contentPanel.style.backgroundImage = `linear-gradient(to right, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.4)), url('${location.image}')`;
+                locationTitle.textContent = location.title;
+                locationDescription.textContent = location.description;
+                vrButton.onclick = () => openModal(location.id);
+                contentOverlay.classList.add('active');
+            }, 300);
+        }
+
+        function rotateCarousel() {
+            const angle = theta * selectedIndex * -1;
+            carousel.style.transform = `translateZ(-${radius}px) rotateY(${angle}deg)`;
+        }
+
+        function createCarouselCards() {
+            const cardWidth = 480; 
+            radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cellCount));
+
+            locations.forEach((location, i) => {
+                const card = document.createElement('div');
+                card.className = 'carousel-card';
+                const angle = theta * i;
+                card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+                card.style.backgroundImage = `url('${location.image}')`;
+                
+                const cardContentHTML = `
+                    <div class="card-overlay"></div>
+                    <div class="card-content">
+                        <h3 class="font-playfair text-3xl font-bold">${location.title}</h3>
+                        <button class="card-vr-button mt-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 inline-flex items-center text-sm">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg>
+                            Experience VR
+                        </button>
+                    </div>
+                `;
+                card.innerHTML = cardContentHTML;
+                
+                card.addEventListener('mouseenter', () => updateMainContent(location));
+                card.querySelector('.card-vr-button').addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent the main panel from updating again
+                    openModal(location.id);
+                });
+
+                carousel.appendChild(card);
+            });
+        }
+        
+        function openModal(videoId) {
+            modalVideoContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&showinfo=0&iv_load_policy=3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+            vrModal.classList.add('active');
+            if (vrModal.requestFullscreen) vrModal.requestFullscreen();
+            else if (vrModal.webkitRequestFullscreen) vrModal.webkitRequestFullscreen();
+        }
+
+        function closeModal() {
+            modalVideoContainer.innerHTML = '';
+            vrModal.classList.remove('active');
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        }
+
+        function startAutoRotate() {
+            clearInterval(autoRotateInterval);
+            autoRotateInterval = setInterval(() => {
+                selectedIndex++;
+                rotateCarousel();
+                const frontIndex = Math.abs(selectedIndex % cellCount);
+                updateMainContent(locations[frontIndex]);
+            }, 5000);
+        }
+
+        prevButton.addEventListener('click', () => {
+            selectedIndex--;
+            rotateCarousel();
+            const frontIndex = Math.abs(selectedIndex % cellCount);
+            updateMainContent(locations[frontIndex]);
+        });
+
+        nextButton.addEventListener('click', () => {
+            selectedIndex++;
+            rotateCarousel();
+            const frontIndex = Math.abs(selectedIndex % cellCount);
+            updateMainContent(locations[frontIndex]);
+        });
+        
+        carouselWrapper.addEventListener('mouseenter', () => clearInterval(autoRotateInterval));
+        carouselWrapper.addEventListener('mouseleave', () => startAutoRotate());
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            } else if (e.key === 'ArrowLeft') {
+                prevButton.click();
+            } else if (e.key === 'ArrowRight') {
+                nextButton.click();
+            }
+        });
+
+        // Initialize
+        createCarouselCards();
+        rotateCarousel();
+        updateMainContent(locations[0]);
+        startAutoRotate();
+    </script>
+</body>
+</html>
+

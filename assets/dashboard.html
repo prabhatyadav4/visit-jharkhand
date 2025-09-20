@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jharkhand Tourism Government Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-in-out;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .main-content {
+            display: none;
+        }
+        .scroll-section {
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #4b5563 #1f2937;
+        }
+        .scroll-section::-webkit-scrollbar {
+            width: 8px;
+        }
+        .scroll-section::-webkit-scrollbar-track {
+            background: #1f2937;
+            border-radius: 10px;
+        }
+        .scroll-section::-webkit-scrollbar-thumb {
+            background-color: #4b5563;
+            border-radius: 10px;
+            border: 2px solid #1f2937;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200">
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="p-8 bg-slate-800 rounded-2xl shadow-2xl text-center">
+            <h2 class="text-2xl font-bold text-white">Admin Login Required</h2>
+            <p class="mt-2 text-slate-400">Click below to access the dashboard.</p>
+            <button id="access-dashboard-btn" class="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition-colors">Access Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Container -->
+    <div id="dashboard-container" class="flex min-h-screen font-sans">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed z-40 inset-y-0 left-0 transform -translate-x-full transition-transform duration-300 ease-in-out bg-slate-900 w-64 md:translate-x-0 md:static">
+            <div class="p-6 text-white text-center border-b border-slate-700">
+                <h1 class="text-2xl font-bold text-emerald-400">Tourism Dashboard</h1>
+                <p class="text-sm text-slate-400 mt-1">Jharkhand, India</p>
+            </div>
+            <nav class="mt-8 px-4">
+                <a href="#" data-section="overview" class="sidebar-link flex items-center space-x-3 p-3 rounded-xl transition-colors duration-200 bg-emerald-600 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-6"/><path d="M2 20h20"/></svg>
+                    <span class="font-medium">Dashboard Overview</span>
+                </a>
+                <a href="#" data-section="revenue" class="sidebar-link flex items-center space-x-3 p-3 mt-2 rounded-xl transition-colors duration-200 text-slate-300 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/><path d="M12 2v20"/></svg>
+                    <span class="font-medium">Revenue Analytics</span>
+                </a>
+                <a href="#" data-section="destination" class="sidebar-link flex items-center space-x-3 p-3 mt-2 rounded-xl transition-colors duration-200 text-slate-300 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M18 8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v13a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V11a3 3 0 0 0-3-3z"/><path d="M12 11V5"/><circle cx="12" cy="5" r="2"/></svg>
+                    <span class="font-medium">Destination Report</span>
+                </a>
+                <a href="#" data-section="growth" class="sidebar-link flex items-center space-x-3 p-3 mt-2 rounded-xl transition-colors duration-200 text-slate-300 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><polyline points="22 17 17 22 12 17"/><path d="M17 22V2"/><polyline points="2 7 7 2 12 7"/><path d="M7 2v20"/></svg>
+                    <span class="font-medium">Growth Analysis</span>
+                </a>
+                <a href="#" data-section="marketplace" class="sidebar-link flex items-center space-x-3 p-3 mt-2 rounded-xl transition-colors duration-200 text-slate-300 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M18 10c0-1.82-1.2-3.3-3-3.83"/><path d="M15 5.23A3.94 3.94 0 0 0 12 3a4 4 0 0 0-3 1.23"/><path d="M8 8.8c-.89.5-1.5 1.5-1.5 2.7.27.1.58.2.9.2A4.5 4.5 0 0 0 12 11c.71 0 1.34.19 1.9.4"/><path d="M19 14.5a3.5 3.5 0 0 0 0-7h-5a3.5 3.5 0 0 0-3 2.15"/><circle cx="12" cy="18" r="4"/><path d="M12 14v4h4"/></svg>
+                    <span class="font-medium">Marketplace Analytics</span>
+                </a>
+                <a href="#" data-section="regional" class="sidebar-link flex items-center space-x-3 p-3 mt-2 rounded-xl transition-colors duration-200 text-slate-300 hover:bg-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span class="font-medium">Regional Insights</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div id="main-content" class="flex-1 flex flex-col p-4 md:p-8 transition-all duration-300 main-content">
+            <!-- Mobile Sidebar Toggle -->
+            <div class="md:hidden mb-4 flex justify-between items-center">
+                <button id="mobile-menu-btn" class="p-2 rounded-full text-slate-400 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                </button>
+                <div class="flex items-center space-x-3 p-2 bg-slate-700 rounded-full cursor-pointer">
+                    <div class="relative w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold">
+                        MS
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-slate-800"></span>
+                    </div>
+                    <div class="hidden md:block">
+                        <p class="text-sm font-semibold text-white">Mr. Singh</p>
+                        <p class="text-xs text-slate-400">Admin Official</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Header -->
+            <header class="hidden md:flex justify-between items-center pb-8 border-b border-slate-700">
+                <h2 class="text-3xl font-extrabold text-white" id="header-title">Tourism Overview Dashboard</h2>
+                <div class="flex items-center space-x-3 p-2 bg-slate-700 rounded-full cursor-pointer">
+                    <div class="relative w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold">
+                        MS
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-slate-800"></span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-white">Mr. Singh</p>
+                        <p class="text-xs text-slate-400">Admin Official</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Region Selection & Gender Demographics -->
+            <div class="mt-4 p-6 bg-slate-800 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
+                <div class="w-full md:w-1/3">
+                    <label for="region-select" class="block text-sm font-medium text-slate-400">Select Region</label>
+                    <select id="region-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-slate-700 rounded-md bg-slate-700 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                        <option value="Jharkhand" selected>All of Jharkhand</option>
+                        <option value="Ranchi">Ranchi</option>
+                        <option value="Deoghar">Deoghar</option>
+                        <option value="Jamshedpur">Jamshedpur</option>
+                        <option value="Palamu">Palamu</option>
+                        <option value="Hazaribagh">Hazaribagh</option>
+                    </select>
+                </div>
+                <div class="w-full md:w-2/3">
+                    <h3 class="text-xl font-bold text-white mb-4 text-center md:text-left" id="gender-chart-title">Tourist Demographics for Jharkhand (Male vs. Female)</h3>
+                    <div class="w-full h-48 md:h-60">
+                        <canvas id="genderChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <main id="dashboard-content" class="mt-4 flex-1">
+                <!-- Overview Section -->
+                <div id="overview-section" class="animate-fadeInUp scroll-section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" id="overview-stats-container">
+                        <!-- Stats cards will be dynamically populated here -->
+                    </div>
+                    <!-- Main charts -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                            <h3 class="text-xl font-bold text-white mb-4">Marketplace Bookings by Category (%)</h3>
+                            <div class="w-full h-80">
+                                <canvas id="marketplaceChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                            <h3 class="text-xl font-bold text-white mb-4">Tour Guide Ratings (%)</h3>
+                            <div class="w-full h-80">
+                                <canvas id="tourGuideChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                            <h3 class="text-xl font-bold text-white mb-4">Weekly Public Transport Usage (in Lakhs)</h3>
+                            <div class="w-full h-80">
+                                <canvas id="transportChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                            <h3 class="text-xl font-bold text-white mb-4">AI Itinerary Planner Theme Popularity</h3>
+                            <div class="w-full h-80">
+                                <canvas id="aiPlannerChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revenue Section -->
+                <div id="revenue-section" class="hidden animate-fadeInUp scroll-section">
+                    <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                        <h3 class="text-xl font-bold text-white mb-4">Tourism Revenue Trend (in ₹ Cr)</h3>
+                        <div class="w-full h-80">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destination Section -->
+                <div id="destination-section" class="hidden animate-fadeInUp scroll-section">
+                    <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                        <h3 class="text-xl font-bold text-white mb-4">Top Destinations by Visitor Footfall (in Lakhs)</h3>
+                        <div class="w-full h-80">
+                            <canvas id="destinationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Growth Section -->
+                <div id="growth-section" class="hidden animate-fadeInUp scroll-section">
+                    <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                        <h3 class="text-xl font-bold text-white mb-4">Domestic vs. International Tourist Growth (in Cr)</h3>
+                        <div class="w-full h-80">
+                            <canvas id="touristChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Marketplace Section -->
+                <div id="marketplace-section" class="hidden animate-fadeInUp scroll-section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                            <h3 class="text-xl font-bold text-white mb-4">Bookings by Category (in Cr)</h3>
+                            <div class="w-full h-80">
+                                <canvas id="marketplaceBookingsChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                            <h3 class="text-xl font-bold text-white mb-4">Marketplace Revenue (in ₹ Cr)</h3>
+                            <div class="w-full h-80">
+                                <canvas id="marketplaceRevenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-slate-800 rounded-2xl shadow-lg mt-6">
+                        <h3 class="text-xl font-bold text-white mb-4">Recent Transactions</h3>
+                        <div class="overflow-x-auto rounded-lg">
+                            <table class="min-w-full text-sm text-left text-slate-400">
+                                <thead class="text-xs uppercase bg-slate-700">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 rounded-tl-lg">ID</th>
+                                        <th scope="col" class="px-6 py-3">Service</th>
+                                        <th scope="col" class="px-6 py-3">Category</th>
+                                        <th scope="col" class="px-6 py-3">Amount (₹)</th>
+                                        <th scope="col" class="px-6 py-3 rounded-tr-lg">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="marketplace-table-body">
+                                    <!-- Table rows will be inserted here by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regional Section -->
+                <div id="regional-section" class="hidden animate-fadeInUp scroll-section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                            <h3 class="text-xl font-bold text-white mb-4">Tourist Footfall by Region (in Cr)</h3>
+                            <div class="w-full h-80">
+                                <canvas id="regionalChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-2xl shadow-lg">
+                            <h3 class="text-xl font-bold text-white mb-4">Top 5 Regional Destinations</h3>
+                            <div class="w-full h-80">
+                                <canvas id="regionalDestinationsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const allData = {
+            'Jharkhand': {
+                overview: { totalTourists: '3.58 Cr', revenue: '₹7.69 Cr', topDestination: 'Baidyanath Dham', sectors: 'Religious & Eco' },
+                gender: { male: 1.85, female: 1.73 },
+                touristData: [{ year: '2019', domestic: 33.8, international: 0.16 }, { year: '2020', domestic: 12.0, international: 0.00049 }, { year: '2021', domestic: 3.38, international: 0.0012 }, { year: '2022', domestic: 38.28, international: 0.19 }, { year: '2023', domestic: 35.77, international: 0.189 }],
+                revenueData: [{ year: '2019', expenditure: 4.5 }, { year: '2020', expenditure: 2.1 }, { year: '2021', expenditure: 3.2 }, { year: '2022', expenditure: 9.96 }, { year: '2023', expenditure: 7.69 }],
+                marketplace: {
+                    categories: [{ name: 'Adventure', value: 45 }, { name: 'Pilgrimage', value: 30 }, { name: 'Art & Craft', value: 15 }, { name: 'Culinary', value: 20 }, { name: 'Nature', value: 35 }, { name: 'Cultural', value: 40 }],
+                    revenue: [{ month: 'Jan', value: 0.5 }, { month: 'Feb', value: 0.8 }, { month: 'Mar', value: 1.2 }, { month: 'Apr', value: 1.5 }, { month: 'May', value: 1.3 }],
+                    transactions: [
+                        { id: '#001', service: 'Guide Booking', category: 'Adventure', amount: 1500, date: '2023-01-15' }, { id: '#002', service: 'Hotel Reservation', category: 'Pilgrimage', amount: 3200, date: '2023-01-16' },
+                        { id: '#003', service: 'Jeep Safari', category: 'Nature', amount: 2800, date: '2023-01-17' }, { id: '#004', service: 'Local Food Tour', category: 'Culinary', amount: 800, date: '2023-01-18' },
+                        { id: '#005', service: 'Cultural Show', category: 'Cultural', amount: 500, date: '2023-01-19' }, { id: '#006', service: 'Handicraft Workshop', category: 'Art & Craft', amount: 1200, date: '2023-01-20' },
+                    ]
+                },
+                tourGuideRatings: [{ name: 'Excellent', value: 65 }, { name: 'Good', value: 25 }, { name: 'Average', value: 8 }, { name: 'Below Average', value: 2 }],
+                publicTransportUsage: [{ day: 'Mon', ridership: 15 }, { day: 'Tue', ridership: 18 }, { day: 'Wed', ridership: 20 }, { day: 'Thu', ridership: 19 }, { day: 'Fri', ridership: 25 }, { day: 'Sat', ridership: 30 }, { day: 'Sun', ridership: 28 }],
+                aiPlannerThemes: [{ theme: 'Adventure', interest: 450 }, { theme: 'Nature', interest: 380 }, { theme: 'Pilgrimage', interest: 290 }, { theme: 'Cultural', interest: 410 }],
+                topDestinations: [{ name: 'Baidyanath Dham', tourists: 12.5 }, { name: 'Parasnath Hill', tourists: 8.2 }, { name: 'Netarhat', tourists: 5.1 }, { name: 'Betla NP', tourists: 3.8 }, { name: 'Dassam Falls', tourists: 3.5 }],
+                regionalFootfall: [{ region: 'North Jharkhand', tourists: 5.2 }, { region: 'South Jharkhand', tourists: 8.5 }, { region: 'East Jharkhand', tourists: 7.1 }, { region: 'West Jharkhand', tourists: 6.8 }],
+            },
+            'Ranchi': {
+                overview: { totalTourists: '1.20 Cr', revenue: '₹2.5 Cr', topDestination: 'Jagannath Temple', sectors: 'Urban & Eco' },
+                gender: { male: 0.65, female: 0.55 },
+                touristData: [{ year: '2019', domestic: 10.5, international: 0.05 }, { year: '2020', domestic: 4.2, international: 0.001 }, { year: '2021', domestic: 1.5, international: 0.0005 }, { year: '2022', domestic: 11.0, international: 0.055 }, { year: '2023', domestic: 10.0, international: 0.05 }],
+                revenueData: [{ year: '2019', expenditure: 1.2 }, { year: '2020', expenditure: 0.8 }, { year: '2021', expenditure: 1.1 }, { year: '2022', expenditure: 2.8 }, { year: '2023', expenditure: 2.5 }],
+                marketplace: {
+                    categories: [{ name: 'Adventure', value: 60 }, { name: 'Urban', value: 30 }, { name: 'Nature', value: 40 }],
+                    revenue: [{ month: 'Jan', value: 0.2 }, { month: 'Feb', value: 0.3 }, { month: 'Mar', value: 0.4 }, { month: 'Apr', value: 0.6 }, { month: 'May', value: 0.5 }],
+                    transactions: [
+                        { id: '#101', service: 'Trekking Pass', category: 'Adventure', amount: 1100, date: '2023-02-01' }, { id: '#102', service: 'City Tour', category: 'Urban', amount: 900, date: '2023-02-02' },
+                    ]
+                },
+                tourGuideRatings: [{ name: 'Excellent', value: 75 }, { name: 'Good', value: 20 }, { name: 'Average', value: 5 }],
+                publicTransportUsage: [{ day: 'Mon', ridership: 5 }, { day: 'Tue', ridership: 6 }, { day: 'Wed', ridership: 7 }, { day: 'Thu', ridership: 7.5 }, { day: 'Fri', ridership: 9 }, { day: 'Sat', ridership: 11 }, { day: 'Sun', ridership: 10 }],
+                aiPlannerThemes: [{ theme: 'Adventure', interest: 200 }, { theme: 'Urban', interest: 180 }, { theme: 'Nature', interest: 250 }],
+                topDestinations: [{ name: 'Jagannath Temple', tourists: 5.5 }, { name: 'Rock Garden', tourists: 3.1 }, { name: 'Hundru Falls', tourists: 2.8 }],
+                regionalFootfall: [{ region: 'Ranchi', tourists: 12.0 }],
+            },
+            'Deoghar': {
+                overview: { totalTourists: '1.50 Cr', revenue: '₹3.1 Cr', topDestination: 'Baidyanath Dham', sectors: 'Religious' },
+                gender: { male: 0.80, female: 0.70 },
+                touristData: [{ year: '2019', domestic: 13.0, international: 0.07 }, { year: '2020', domestic: 5.0, international: 0.002 }, { year: '2021', domestic: 2.5, international: 0.0008 }, { year: '2022', domestic: 15.0, international: 0.08 }, { year: '2023', domestic: 14.5, international: 0.07 }],
+                revenueData: [{ year: '2019', expenditure: 1.5 }, { year: '2020', expenditure: 0.9 }, { year: '2021', expenditure: 1.3 }, { year: '2022', expenditure: 3.5 }, { year: '2023', expenditure: 3.1 }],
+                marketplace: {
+                    categories: [{ name: 'Pilgrimage', value: 90 }, { name: 'Cultural', value: 10 }],
+                    revenue: [{ month: 'Jan', value: 0.3 }, { month: 'Feb', value: 0.5 }, { month: 'Mar', value: 0.7 }, { month: 'Apr', value: 0.8 }, { month: 'May', value: 0.7 }],
+                    transactions: [
+                        { id: '#201', service: 'Puja Booking', category: 'Pilgrimage', amount: 2000, date: '2023-03-01' }, { id: '#202', service: 'Local Rituals', category: 'Pilgrimage', amount: 1500, date: '2023-03-02' },
+                    ]
+                },
+                tourGuideRatings: [{ name: 'Excellent', value: 80 }, { name: 'Good', value: 15 }, { name: 'Average', value: 5 }],
+                publicTransportUsage: [{ day: 'Mon', ridership: 8 }, { day: 'Tue', ridership: 9 }, { day: 'Wed', ridership: 10 }, { day: 'Thu', ridership: 12 }, { day: 'Fri', ridership: 14 }, { day: 'Sat', ridership: 16 }, { day: 'Sun', ridership: 15 }],
+                aiPlannerThemes: [{ theme: 'Pilgrimage', interest: 300 }, { theme: 'Cultural', interest: 100 }],
+                topDestinations: [{ name: 'Baidyanath Dham', tourists: 12.5 }, { name: 'Trikut Pahar', tourists: 1.5 }, { name: 'Basukinath Temple', tourists: 1.0 }],
+                regionalFootfall: [{ region: 'Deoghar', tourists: 15.0 }],
+            },
+            'Jamshedpur': {
+                overview: { totalTourists: '0.80 Cr', revenue: '₹1.8 Cr', topDestination: 'Jubilee Park', sectors: 'Urban & Industrial' },
+                gender: { male: 0.45, female: 0.35 },
+                touristData: [{ year: '2019', domestic: 7.0, international: 0.04 }, { year: '2020', domestic: 3.0, international: 0.0008 }, { year: '2021', domestic: 1.0, international: 0.0004 }, { year: '2022', domestic: 8.0, international: 0.045 }, { year: '2023', domestic: 7.5, international: 0.04 }],
+                revenueData: [{ year: '2019', expenditure: 0.9 }, { year: '2020', expenditure: 0.5 }, { year: '2021', expenditure: 0.7 }, { year: '2022', expenditure: 2.0 }, { year: '2023', expenditure: 1.8 }],
+                marketplace: {
+                    categories: [{ name: 'Urban', value: 70 }, { name: 'Culinary', value: 30 }],
+                    revenue: [{ month: 'Jan', value: 0.1 }, { month: 'Feb', value: 0.2 }, { month: 'Mar', value: 0.3 }, { month: 'Apr', value: 0.4 }, { month: 'May', value: 0.35 }],
+                    transactions: [
+                        { id: '#301', service: 'City Museum Tour', category: 'Urban', amount: 700, date: '2023-04-01' }, { id: '#302', service: 'Food Tasting', category: 'Culinary', amount: 600, date: '2023-04-02' },
+                    ]
+                },
+                tourGuideRatings: [{ name: 'Excellent', value: 60 }, { name: 'Good', value: 30 }, { name: 'Average', value: 10 }],
+                publicTransportUsage: [{ day: 'Mon', ridership: 4 }, { day: 'Tue', ridership: 5 }, { day: 'Wed', ridership: 6 }, { day: 'Thu', ridership: 7 }, { day: 'Fri', ridership: 8 }, { day: 'Sat', ridership: 9 }, { day: 'Sun', ridership: 8.5 }],
+                aiPlannerThemes: [{ theme: 'Urban', interest: 150 }, { theme: 'Culinary', interest: 120 }],
+                topDestinations: [{ name: 'Jubilee Park', tourists: 4.5 }, { name: 'Tata Steel Zoological Park', tourists: 2.1 }, { name: 'Dalma Wildlife Sanctuary', tourists: 1.0 }],
+                regionalFootfall: [{ region: 'Jamshedpur', tourists: 8.0 }],
+            },
+            'Palamu': {
+                overview: { totalTourists: '0.50 Cr', revenue: '₹0.8 Cr', topDestination: 'Palamu Fort', sectors: 'Nature & Historical' },
+                gender: { male: 0.30, female: 0.20 },
+                touristData: [{ year: '2019', domestic: 4.5, international: 0.01 }, { year: '2020', domestic: 1.5, international: 0.0001 }, { year: '2021', domestic: 0.5, international: 0.0001 }, { year: '2022', domestic: 5.0, international: 0.02 }, { year: '2023', domestic: 4.8, international: 0.015 }],
+                revenueData: [{ year: '2019', expenditure: 0.5 }, { year: '2020', expenditure: 0.2 }, { year: '2021', expenditure: 0.3 }, { year: '2022', expenditure: 0.9 }, { year: '2023', expenditure: 0.8 }],
+                marketplace: {
+                    categories: [{ name: 'Nature', value: 50 }, { name: 'Historical', value: 40 }],
+                    revenue: [{ month: 'Jan', value: 0.05 }, { month: 'Feb', value: 0.08 }, { month: 'Mar', value: 0.1 }, { month: 'Apr', value: 0.15 }, { month: 'May', value: 0.12 }],
+                    transactions: [
+                        { id: '#401', service: 'Forest Safari', category: 'Nature', amount: 1800, date: '2023-05-01' }, { id: '#402', service: 'Fort Tour', category: 'Historical', amount: 500, date: '2023-05-02' },
+                    ]
+                },
+                tourGuideRatings: [{ name: 'Excellent', value: 70 }, { name: 'Good', value: 25 }, { name: 'Average', value: 5 }],
+                publicTransportUsage: [{ day: 'Mon', ridership: 2 }, { day: 'Tue', ridership: 2.5 }, { day: 'Wed', ridership: 3 }, { day: 'Thu', ridership: 3.5 }, { day: 'Fri', ridership: 4 }, { day: 'Sat', ridership: 5 }, { day: 'Sun', ridership: 4.5 }],
+                aiPlannerThemes: [{ theme: 'Nature', interest: 100 }, { theme: 'Historical', interest: 80 }],
+                topDestinations: [{ name: 'Palamu Fort', tourists: 2.0 }, { name: 'Betla National Park', tourists: 1.5 }],
+                regionalFootfall: [{ region: 'Palamu', tourists: 5.0 }],
+            },
+            'Hazaribagh': {
+                overview: { totalTourists: '0.75 Cr', revenue: '₹1.5 Cr', topDestination: 'Canary Hill', sectors: 'Nature & Adventure' },
+                gender: { male: 0.42, female: 0.33 },
+                touristData: [{ year: '2019', domestic: 6.5, international: 0.02 }, { year: '2020', domestic: 2.5, international: 0.0005 }, { year: '2021', domestic: 1.0, international: 0.0002 }, { year: '2022', domestic: 7.0, international: 0.03 }, { year: '2023', domestic: 7.2, international: 0.035 }],
+                revenueData: [{ year: '2019', expenditure: 0.8 }, { year: '2020', expenditure: 0.4 }, { year: '2021', expenditure: 0.6 }, { year: '2022', expenditure: 1.6 }, { year: '2023', expenditure: 1.5 }],
+                marketplace: {
+                    categories: [{ name: 'Adventure', value: 65 }, { name: 'Nature', value: 35 }],
+                    revenue: [{ month: 'Jan', value: 0.08 }, { month: 'Feb', value: 0.1 }, { month: 'Mar', value: 0.2 }, { month: 'Apr', value: 0.25 }, { month: 'May', value: 0.22 }],
+                    transactions: [
+                        { id: '#501', service: 'Boat Ride', category: 'Nature', amount: 600, date: '2023-06-01' }, { id: '#502', service: 'Trekking', category: 'Adventure', amount: 1000, date: '2023-06-02' },
+                    ]
+                },
+                tourGuideRatings: [{ name: 'Excellent', value: 68 }, { name: 'Good', value: 27 }, { name: 'Average', value: 5 }],
+                publicTransportUsage: [{ day: 'Mon', ridership: 3 }, { day: 'Tue', ridership: 3.5 }, { day: 'Wed', ridership: 4 }, { day: 'Thu', ridership: 4.5 }, { day: 'Fri', ridership: 5 }, { day: 'Sat', ridership: 6 }, { day: 'Sun', ridership: 5.5 }],
+                aiPlannerThemes: [{ theme: 'Adventure', interest: 180 }, { theme: 'Nature', interest: 150 }],
+                topDestinations: [{ name: 'Canary Hill', tourists: 3.0 }, { name: 'Hazaribagh National Park', tourists: 2.5 }],
+                regionalFootfall: [{ region: 'Hazaribagh', tourists: 7.5 }],
+            },
+        };
+
+        let charts = {};
+        let currentRegion = 'Jharkhand';
+
+        function renderAllCharts() {
+            renderChartsForRegion(currentRegion);
+        }
+
+        function renderChartsForRegion(regionName) {
+            const data = allData[regionName];
+            if (!data) return;
+
+            // Destroy existing charts to prevent stacking
+            Object.values(charts).forEach(chart => chart.destroy());
+            charts = {};
+
+            // Update Overview Stats
+            const overviewContainer = document.getElementById('overview-stats-container');
+            overviewContainer.innerHTML = '';
+            overviewContainer.innerHTML = `
+                <div class="p-6 bg-slate-800 rounded-2xl shadow-lg flex items-center justify-between border-l-4 border-l-emerald-600">
+                    <div class="flex-1">
+                        <h3 class="text-sm font-semibold text-slate-400 uppercase">Total Tourists (2023)</h3>
+                        <p class="text-3xl font-bold text-white mt-1">${data.overview.totalTourists}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-emerald-600 bg-opacity-20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-emerald-600"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-800 rounded-2xl shadow-lg flex items-center justify-between border-l-4 border-l-purple-600">
+                    <div class="flex-1">
+                        <h3 class="text-sm font-semibold text-slate-400 uppercase">Tourism Revenue (FY23)</h3>
+                        <p class="text-3xl font-bold text-white mt-1">${data.overview.revenue}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-purple-600 bg-opacity-20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-purple-600"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/><path d="M12 2v20"/></svg>
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-800 rounded-2xl shadow-lg flex items-center justify-between border-l-4 border-l-indigo-600">
+                    <div class="flex-1">
+                        <h3 class="text-sm font-semibold text-slate-400 uppercase">Top Destination</h3>
+                        <p class="text-3xl font-bold text-white mt-1">${data.overview.topDestination}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-indigo-600 bg-opacity-20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-indigo-600"><path d="M18 8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v13a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V11a3 3 0 0 0-3-3z"/><path d="M12 11V5"/><circle cx="12" cy="5" r="2"/></svg>
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-800 rounded-2xl shadow-lg flex items-center justify-between border-l-4 border-l-orange-600">
+                    <div class="flex-1">
+                        <h3 class="text-sm font-semibold text-slate-400 uppercase">Tourism Sectors</h3>
+                        <p class="text-3xl font-bold text-white mt-1">${data.overview.sectors}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-orange-600 bg-opacity-20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-orange-600"><path d="M18 10c0-1.82-1.2-3.3-3-3.83"/><path d="M15 5.23A3.94 3.94 0 0 0 12 3a4 4 0 0 0-3 1.23"/><path d="M8 8.8c-.89.5-1.5 1.5-1.5 2.7.27.1.58.2.9.2A4.5 4.5 0 0 0 12 11c.71 0 1.34.19 1.9.4"/><path d="M19 14.5a3.5 3.5 0 0 0 0-7h-5a3.5 3.5 0 0 0-3 2.15"/><circle cx="12" cy="18" r="4"/><path d="M12 14v4h4"/></svg>
+                    </div>
+                </div>
+            `;
+
+            // Update Gender Chart
+            document.getElementById('gender-chart-title').textContent = `Tourist Demographics for ${regionName} (Male vs. Female)`;
+            const genderData = [data.gender.male, data.gender.female];
+            const genderLabels = ['Male', 'Female'];
+            renderChart('genderChart', 'pie', genderLabels, [{ label: 'Tourists (Cr)', data: genderData, backgroundColor: ['#3b82f6', '#f59e0b'] }]);
+
+            // Render Section-specific charts
+            if (document.getElementById('overview-section').classList.contains('hidden') === false) {
+                renderChart('marketplaceChart', 'bar', data.marketplace.categories.map(d => d.name), [{ label: 'Bookings (%)', data: data.marketplace.categories.map(d => d.value), backgroundColor: ['#a855f7', '#06b6d4', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'] }]);
+                renderChart('tourGuideChart', 'pie', data.tourGuideRatings.map(d => d.name), [{ label: 'Ratings (%)', data: data.tourGuideRatings.map(d => d.value), backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'] }]);
+                renderChart('transportChart', 'line', data.publicTransportUsage.map(d => d.day), [{ label: 'Ridership (Lakhs)', data: data.publicTransportUsage.map(d => d.ridership), borderColor: '#06b6d4', tension: 0.4, fill: false }]);
+                renderChart('aiPlannerChart', 'bar', data.aiPlannerThemes.map(d => d.theme), [{ label: 'Interest', data: data.aiPlannerThemes.map(d => d.interest), backgroundColor: ['#ef4444', '#a855f7', '#f59e0b', '#3b82f6'] }], 'y');
+            }
+            if (document.getElementById('revenue-section').classList.contains('hidden') === false) {
+                renderChart('revenueChart', 'line', data.revenueData.map(d => d.year), [{ label: 'Expenditure (₹ Cr)', data: data.revenueData.map(d => d.expenditure), borderColor: '#f59e0b', tension: 0.4, fill: false }]);
+            }
+            if (document.getElementById('destination-section').classList.contains('hidden') === false) {
+                renderChart('destinationChart', 'bar', data.topDestinations.map(d => d.name), [{ label: 'Tourists (Lakhs)', data: data.topDestinations.map(d => d.tourists), backgroundColor: '#a855f7' }], 'y');
+            }
+            if (document.getElementById('growth-section').classList.contains('hidden') === false) {
+                renderChart('touristChart', 'bar', data.touristData.map(d => d.year), [{ label: 'Domestic Tourists (Cr)', data: data.touristData.map(d => d.domestic), backgroundColor: '#10b981' }, { label: 'International Tourists (Lakhs)', data: data.touristData.map(d => d.international * 100), backgroundColor: '#3b82f6' }]);
+            }
+            if (document.getElementById('marketplace-section').classList.contains('hidden') === false) {
+                renderChart('marketplaceBookingsChart', 'doughnut', data.marketplace.categories.map(d => d.name), [{ label: 'Bookings', data: data.marketplace.categories.map(d => d.value), backgroundColor: ['#a855f7', '#06b6d4', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'] }]);
+                renderChart('marketplaceRevenueChart', 'line', data.marketplace.revenue.map(d => d.month), [{ label: 'Revenue (₹ Cr)', data: data.marketplace.revenue.map(d => d.value), borderColor: '#10b981', tension: 0.4, fill: false }]);
+                renderMarketplaceTable(data.marketplace.transactions);
+            }
+            if (document.getElementById('regional-section').classList.contains('hidden') === false) {
+                renderChart('regionalChart', 'bar', data.regionalFootfall.map(d => d.region), [{ label: 'Tourist Footfall (Cr)', data: data.regionalFootfall.map(d => d.tourists), backgroundColor: '#ef4444' }]);
+                renderChart('regionalDestinationsChart', 'bar', data.topDestinations.map(d => d.name), [{ label: 'Tourists (Lakhs)', data: data.topDestinations.map(d => d.tourists), backgroundColor: '#06b6d4' }], 'y');
+            }
+        }
+
+        function renderChart(canvasId, type, labels, datasets, axis = 'x') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            const options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#e2e8f0' } }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+                }
+            };
+            if (axis === 'y') {
+                options.indexAxis = 'y';
+            }
+            if (type === 'pie' || type === 'doughnut') {
+                delete options.scales;
+            }
+
+            charts[canvasId] = new Chart(canvas.getContext('2d'), {
+                type: type,
+                data: { labels, datasets },
+                options
+            });
+        }
+
+        function renderMarketplaceTable(transactions) {
+            const tableBody = document.getElementById('marketplace-table-body');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            transactions.forEach((tx, index) => {
+                const row = document.createElement('tr');
+                row.className = `border-b ${index % 2 === 0 ? 'bg-slate-800' : 'bg-slate-700'} border-slate-600 hover:bg-slate-600 transition-colors`;
+                row.innerHTML = `
+                    <td class="px-6 py-4 font-medium text-white">${tx.id}</td>
+                    <td class="px-6 py-4">${tx.service}</td>
+                    <td class="px-6 py-4">${tx.category}</td>
+                    <td class="px-6 py-4">₹${tx.amount.toLocaleString()}</td>
+                    <td class="px-6 py-4">${tx.date}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginScreen = document.getElementById('login-screen');
+            const dashboardContainer = document.getElementById('dashboard-container');
+            const accessBtn = document.getElementById('access-dashboard-btn');
+            const sidebar = document.getElementById('sidebar');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const headerTitle = document.getElementById('header-title');
+            const regionSelect = document.getElementById('region-select');
+
+            const sections = {
+                'overview': document.getElementById('overview-section'),
+                'revenue': document.getElementById('revenue-section'),
+                'destination': document.getElementById('destination-section'),
+                'growth': document.getElementById('growth-section'),
+                'marketplace': document.getElementById('marketplace-section'),
+                'regional': document.getElementById('regional-section'),
+            };
+
+            const sectionTitles = {
+                'overview': 'Tourism Overview Dashboard',
+                'revenue': 'Revenue Analytics',
+                'destination': 'Destination Report',
+                'growth': 'Growth Analysis',
+                'marketplace': 'Marketplace Analytics',
+                'regional': 'Regional Insights',
+            };
+
+            function showSection(sectionId) {
+                Object.keys(sections).forEach(id => {
+                    sections[id].classList.add('hidden');
+                });
+                sections[sectionId].classList.remove('hidden');
+                headerTitle.textContent = sectionTitles[sectionId];
+                renderChartsForRegion(currentRegion);
+
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('bg-emerald-600', 'text-white');
+                    link.classList.add('text-slate-300', 'hover:bg-slate-700');
+                });
+
+                document.querySelector(`[data-section="${sectionId}"]`).classList.remove('text-slate-300', 'hover:bg-slate-700');
+                document.querySelector(`[data-section="${sectionId}"]`).classList.add('bg-emerald-600', 'text-white');
+            }
+
+            accessBtn.addEventListener('click', () => {
+                loginScreen.classList.add('hidden');
+                dashboardContainer.classList.remove('main-content');
+                dashboardContainer.classList.add('flex');
+                showSection('overview');
+            });
+
+            mobileMenuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = e.currentTarget.dataset.section;
+                    showSection(section);
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.add('-translate-x-full');
+                    }
+                });
+            });
+
+            regionSelect.addEventListener('change', (e) => {
+                currentRegion = e.target.value;
+                showSection(document.querySelector('.sidebar-link.bg-emerald-600').dataset.section);
+            });
+
+            showSection('overview');
+        });
+    </script>
+</body>
+</html>
