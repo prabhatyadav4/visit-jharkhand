@@ -167,37 +167,6 @@ nav:hover {
   background-color: white;
 }
 
-.side-menu .side-nav-links a {
-    display: flex;         /* Lays out icon and text side-by-side */
-    align-items: center;   /* Vertically centers them */
-    gap: 15px;             /* Adds space between icon and text */
-    text-decoration: none;
-    color: #f0f0f0;
-    padding: 12px 15px;
-    border-radius: 8px;
-    transition: background-color 0.3s;
-}
-
-.side-menu .side-nav-links a span {
-    white-space: nowrap; /* Prevents text like "Analytical Dashboard" from wrapping */
-}
-
-.side-menu .side-nav-links a svg {
-    width: 22px;
-    height: 22px;
-    flex-shrink: 0;      /* Prevents the icon from shrinking */
-    color: #a0a0a0;
-    stroke-width: 1.5;
-}
-
-.side-menu .side-nav-links a:hover {
-    background-color: #2a2a2a;
-    color: #fff;
-}
-.side-menu .side-nav-links a:hover svg {
-    color: #fff;
-}
-
 .side-menu {
   position: fixed;
   top: 0;
